@@ -1,6 +1,7 @@
 <script setup lang="ts">
-const { data: registryHeaders } = await useAsyncData('headers', () => $fetch('http://registry-server.test/api/registry/headers'))
+const { client } = useSanctumFetch()
 
+const { data: registryHeaders } = await useAsyncData('headers', () => client('/api/registry/headers'))
 </script>
 
 <template>
@@ -9,7 +10,7 @@ const { data: registryHeaders } = await useAsyncData('headers', () => $fetch('ht
       поиск и пр
     </div>
     <div class="grid grid-cols-[auto_1fr]">
-      <CoreRecentRegistryMenu :items="registryHeaders.data" />
+      <CoreRecentRegistryMenu :items="registryHeaders?.data" />
 
       <div class="p-4">
         <slot />
