@@ -1,5 +1,4 @@
 import { defineStore } from 'pinia'
-import {useSanctumFetch} from "#build/imports";
 
 export const useRegistryStore = defineStore('registry', () => {
     const { client } = useSanctumFetch()
@@ -18,11 +17,21 @@ export const useRegistryStore = defineStore('registry', () => {
         currentZlList.value = response?.data
     }
 
-    async function fetchZaps(registry_id:number) {
+    async function fetchHeader(header_id:number|string) {
+        const response = await client('/api/registry/header', {
+            method: 'POST',
+            body: {
+                header_id
+            }
+        })
+        currentHeader.value = response?.data
+    }
+
+    async function fetchZaps(zl_list_id:number) {
         const response = await client('/api/registry/zaps', {
             method: 'POST',
             body: {
-                registry_id
+                zl_list_id
             }
         })
 
@@ -30,6 +39,7 @@ export const useRegistryStore = defineStore('registry', () => {
     }
 
     return {
+        fetchHeader,
         currentHeader,
         fetchZlList,
         currentZlList,

@@ -1,5 +1,7 @@
 <template>
-  <NuxtLayout>
-    <NuxtPage />
-  </NuxtLayout>
+  <NaiveConfig>
+    <NuxtLayout>
+      <NuxtPage />
+    </NuxtLayout>
+  </NaiveConfig>
 </template>

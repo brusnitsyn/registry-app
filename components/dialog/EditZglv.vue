@@ -1,93 +1,90 @@
 <script setup lang="ts">
-import {toTypedSchema} from "@vee-validate/zod"
-import * as z from 'zod'
-import {useForm} from "vee-validate"
 
-const formSchema = toTypedSchema(z.object({
-  version: z.string(),
-  data: z.string(),
-  filename: z.string(),
-  sd_z: z.string(),
-}))
+type ZglvRegistry = {
+  id:number,
+  version:string,
+  data:string,
+  filename:string,
+  filename1:string,
+  sd_z:number,
+}
 
-const form = useForm({
-  validationSchema: formSchema,
+const props = defineProps<{ hasOpen: boolean, zglv: any }>()
+
+const formModel = ref({
+  version: '',
+  data: '',
+  filename: '',
+  sd_z: ''
 })
 
-const onSubmit = form.handleSubmit((values) => {
-  console.log('Form submitted!', values)
+watchEffect(() => {
+  if(props.zglv !== null) formModel.value = props.zglv
 })
+
+const onSubmit = () => {
+  console.log('Form submitted!')
+}
+
+const onClose = (value?:boolean) => {
+  emits('update:open', value)
+}
 
 const emits = defineEmits([
   'update:open'
 ])
-const props = defineProps<{ hasOpen: boolean }>()
+
 </script>
 
 <template>
-  <Dialog :open="hasOpen" @update:open="value => emits('update:open', value)">
-    <DialogContent class="max-w-2xl w-full">
-      <DialogHeader>
-        <DialogTitle>Редактирование заголовка файла</DialogTitle>
-        <DialogDescription>
-        </DialogDescription>
-      </DialogHeader>
+  <NModal :mask-closable="false" :show="hasOpen" @update:show="value => onClose(value)">
+    <NCard class="max-w-2xl" title="Редактирование заголовка файла">
+      <template #header-extra>
+        <NButton quaternary circle @click="onClose(false)">
+          <template #icon>
+            <NaiveIcon name="ri:close-fill" />
+          </template>
+        </NButton>
+      </template>
 
-      <form>
-        <div class="grid grid-cols-2 gap-2 gap-x-4">
-          <FormField v-slot="{ componentField }" name="version">
-            <FormItem>
-              <FormLabel>Версия взаимодействия</FormLabel>
-              <FormControl>
-                <Input type="text" placeholder="" v-bind="componentField" />
-              </FormControl>
-              <FormDescription>
-                Текущей редакции соответствует значение «3.2»
-              </FormDescription>
-              <FormMessage />
-            </FormItem>
-          </FormField>
-          <FormField v-slot="{ componentField }" name="data">
-            <FormItem>
-              <FormLabel>Дата</FormLabel>
-              <FormControl>
-                <Input type="text" placeholder="" v-bind="componentField" />
-              </FormControl>
-              <FormDescription>
-                Дата выгрузки счета
-              </FormDescription>
-              <FormMessage />
-            </FormItem>
-          </FormField>
-          <FormField v-slot="{ componentField }" name="filename">
-            <FormItem>
-              <FormLabel>Имя файла</FormLabel>
-              <FormControl>
-                <Input type="text" placeholder="" v-bind="componentField" />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          </FormField>
-          <FormField v-slot="{ componentField }" name="sd_z">
-            <FormItem>
-              <FormLabel>Количество записей в файле</FormLabel>
-              <FormControl>
-                <Input type="text" placeholder="" v-bind="componentField" />
-              </FormControl>
-              <FormDescription>
-                Количество записей о случаях оказания медицинской помощи
-              </FormDescription>
-              <FormMessage />
-            </FormItem>
-          </FormField>
-        </div>
-      </form>
+      <NForm ref="formRef" :model="formModel">
+        <NGrid x-gap="16" :cols="2">
+          <NGi>
+            <NFormItem label="Имя файла" path="filename">
+              <NInput v-model:value="formModel.filename" placeholder="" />
+            </NFormItem>
+          </NGi>
+          <NGi>
+            <NFormItem label="Дата" path="data">
+              <NInput v-model:value="formModel.data" placeholder="" />
+<!--              <NDatePicker v-model:value="formModel.data" type="date" />-->
+            </NFormItem>
+          </NGi>
+        </NGrid>
+        <NGrid x-gap="16" :cols="2">
+          <NGi>
+            <NFormItem label="Версия взаимодействия" path="version">
+              <NInput v-model:value="formModel.version" placeholder="" />
+            </NFormItem>
+          </NGi>
+          <NGi>
+            <NFormItem label="Количество записей в файле" path="sd_z">
+              <NInput v-model:value="formModel.sd_z" placeholder="" />
+            </NFormItem>
+          </NGi>
+        </NGrid>
+      </NForm>
 
-      <DialogFooter>
-        <Button @click="onSubmit" type="submit">
-          Сохранить
-        </Button>
-      </DialogFooter>
-    </DialogContent>
-  </Dialog>
+      <template #action>
+        <NFlex justify="space-between">
+          <NButton strong secondary @click="onClose(false)">
+            Отмена
+          </NButton>
+          <NButton type="primary" @click="onSubmit">
+            Сохранить
+          </NButton>
+        </NFlex>
+      </template>
+    </NCard>
+  </NModal>
 </template>

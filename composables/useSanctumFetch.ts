@@ -24,8 +24,6 @@ export function useSanctumFetch() {
             }
         }
 
-        console.log(defaults.baseURL)
-
         const params = defu(defaults, options)
 
         return $fetch(url, params)

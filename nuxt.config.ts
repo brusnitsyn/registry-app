@@ -2,7 +2,7 @@
 export default defineNuxtConfig({
   compatibilityDate: '2024-04-03',
   devtools: { enabled: true },
-  modules: ["@nuxtjs/tailwindcss", "@pinia/nuxt", "shadcn-nuxt"],
+  modules: ["@nuxtjs/tailwindcss", "@pinia/nuxt", "shadcn-nuxt", "@bg-dev/nuxt-naiveui"],
   pinia: {
     storesDirs: ['./stores/**'],
   },
