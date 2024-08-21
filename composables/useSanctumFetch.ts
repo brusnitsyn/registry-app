@@ -13,8 +13,6 @@ export function useSanctumFetch() {
                 ? { Authorization: `Bearer ${cookieToken.value}`, Accept: 'application/json' }
                 : { Accept: 'application/json' },
 
-            cache: "no-cache",
-
             onResponse(_ctx) {
                 // _ctx.response._data = new myBusinessResponse(_ctx.response._data)
             },

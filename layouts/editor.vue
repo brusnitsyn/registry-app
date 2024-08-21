@@ -12,7 +12,7 @@ const { data: registryHeaders } = await useAsyncData('headers', () => client('/a
     <div class="grid grid-cols-[auto_1fr]">
       <CoreRecentRegistryMenu :items="registryHeaders?.data" />
 
-      <div class="p-4">
+      <div class="max-h-[calc(100vh-20px-20px)] overflow-hidden">
         <slot />
       </div>
     </div>

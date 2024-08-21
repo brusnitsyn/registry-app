@@ -52,7 +52,7 @@ const openZaps = async (zl_list_id:number) => {
 </script>
 
 <template>
-  <div v-if="registryStore.currentHeader" class="container max-w-5xl mx-auto">
+  <div v-if="registryStore.currentHeader" class="container max-w-5xl mx-auto py-4">
     <NCollapse :default-expanded-names="[0, 1, 2, 3, 4, 5, 6]">
       <NCollapseItem :name="index" :title="`${zlList.zglv.filename} [${zlList.schet.coments}]`" v-for="(zlList, index) in registryStore.currentHeader.zl_lists">
         <div class="grid grid-cols-3 gap-x-4">

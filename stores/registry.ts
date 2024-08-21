@@ -27,15 +27,18 @@ export const useRegistryStore = defineStore('registry', () => {
         currentHeader.value = response?.data
     }
 
-    async function fetchZaps(zl_list_id:number) {
+    async function fetchZaps(zl_list_id:number, page:number|null) {
         const response = await client('/api/registry/zaps', {
             method: 'POST',
             body: {
                 zl_list_id
+            },
+            query: {
+                page,
             }
         })
 
-        currentZaps.value = response?.data
+        currentZaps.value = response
     }
 
     return {
