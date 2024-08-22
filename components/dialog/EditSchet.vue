@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import {format} from "date-fns";
+
 type SchetRegistry = {
   id:number,
   code:string,
@@ -47,6 +49,15 @@ const onClose = (value?:boolean) => {
 const emits = defineEmits([
   'update:open'
 ])
+
+const formatDate = computed({
+  get() {
+    return new Date(formModel.value.dschet)
+  },
+  set(value:number) {
+    formModel.value.dschet = format(new Date(value), 'yyyy-MM-dd')
+  }
+})
 </script>
 
 <template>
@@ -70,7 +81,6 @@ const emits = defineEmits([
           <NGi>
             <NFormItem label="Номер медицинской организации" path="code_mo">
               <NInput v-model:value="formModel.code_mo" placeholder="" />
-              <!--              <NDatePicker v-model:value="formModel.data" type="date" />-->
             </NFormItem>
           </NGi>
         </NGrid>
@@ -94,7 +104,7 @@ const emits = defineEmits([
           </NGi>
           <NGi>
             <NFormItem label="Дата выставления счёта" path="dschet">
-              <NInput v-model:value="formModel.dschet" placeholder="" />
+              <NDatePicker v-model:value="formatDate" format="dd.MM.yyyy" type="date" class="w-full" />
             </NFormItem>
           </NGi>
         </NGrid>

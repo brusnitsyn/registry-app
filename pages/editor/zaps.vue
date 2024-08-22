@@ -24,7 +24,12 @@ const currentPage = computed({
   <div class="grid grid-rows-[auto_1fr_auto] h-full">
 
     <div class="container max-w-5xl mx-auto py-4">
-      <NInput v-model:value="search" placeholder="Поиск записи" />
+      <NInputGroup>
+        <NInput v-model:value="search" placeholder="Поиск записи" />
+        <NButton>
+          Найти
+        </NButton>
+      </NInputGroup>
     </div>
 
     <div class="overflow-hidden">

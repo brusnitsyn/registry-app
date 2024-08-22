@@ -1,5 +1,5 @@
 <script setup lang="ts">
-
+import { format } from 'date-fns'
 type ZglvRegistry = {
   id:number,
   version:string,
@@ -34,6 +34,15 @@ const emits = defineEmits([
   'update:open'
 ])
 
+const formatDate = computed({
+  get() {
+    return new Date(formModel.value.data)
+  },
+  set(value:number) {
+    formModel.value.data = format(new Date(value), 'yyyy-MM-dd')
+  }
+})
+
 </script>
 
 <template>
@@ -56,8 +65,7 @@ const emits = defineEmits([
           </NGi>
           <NGi>
             <NFormItem label="Дата" path="data">
-              <NInput v-model:value="formModel.data" placeholder="" />
-<!--              <NDatePicker v-model:value="formModel.data" type="date" />-->
+              <NDatePicker v-model:value="formatDate" format="dd.MM.yyyy" type="date" class="w-full" />
             </NFormItem>
           </NGi>
         </NGrid>
