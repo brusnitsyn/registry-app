@@ -1,14 +1,41 @@
 import { defineStore } from 'pinia'
+import {encodeQueryValue, normalizeURL, stringifyQuery, withQuery} from "ufo";
+type Pers = {
+    fam?:string,
+    im:string,
+    ot?:string,
+    w:number,
+    dr:string,
+    snils?:string,
+    okatog?:string,
+    okatop?:string,
+}
+
+type PacientRegistry = {
+    id:number,
+    id_pac:string,
+    vpolis:number,
+    spolis?:string,
+    npolis?:string,
+    enp?:string,
+    st_okato?:string,
+    smo?:string,
+    smo_nam?:string,
+    inv?:number,
+    mse?:string,
+    novor?:string,
+    vnov_d?:string,
+    pers:Pers
+}
 
 export const useRegistryStore = defineStore('registry', () => {
-    const { client } = useSanctumFetch()
-
     const currentHeader = ref(null)
     const currentZlList = ref(null)
     const currentZaps = ref(null)
+    const currentPacient = ref<PacientRegistry|null>()
 
     async function fetchZlList(header_id:number|string) {
-        const response = await client('/api/registry/zl-list', {
+        const response = await useAPI('/api/registry/zl-list', {
             method: 'POST',
             body: {
                 header_id
@@ -18,27 +45,40 @@ export const useRegistryStore = defineStore('registry', () => {
     }
 
     async function fetchHeader(header_id:number|string) {
-        const response = await client('/api/registry/header', {
+        const { data } = await useAPI('/api/registry/header', {
             method: 'POST',
             body: {
                 header_id
             }
         })
-        currentHeader.value = response?.data
+        console.log(data)
+        currentHeader.value = data?.value
     }
 
-    async function fetchZaps(zl_list_id:number, page:number|null) {
-        const response = await client('/api/registry/zaps', {
+    async function fetchZaps(zl_list_id:number, page:number|null, search:object|null) {
+        const query = {page, ...search}
+
+        const response = await useAPI('/api/registry/zaps', {
             method: 'POST',
             body: {
                 zl_list_id
             },
-            query: {
-                page,
+            query
+        })
+
+        currentZaps.value = response.data
+    }
+
+    async function fetchPacient(zap_id:number) {
+        if (zap_id === null) return
+        const response = await useAPI('/api/registry/pacient', {
+            method: 'POST',
+            body: {
+                zap_id
             }
         })
 
-        currentZaps.value = response
+        currentPacient.value = response?.data.data
     }
 
     return {
@@ -48,5 +88,11 @@ export const useRegistryStore = defineStore('registry', () => {
         currentZlList,
         fetchZaps,
         currentZaps,
+        fetchPacient,
+        currentPacient
     }
 })
+
+if (import.meta.hot) {
+    import.meta.hot.accept(acceptHMRUpdate(useRegistryStore, import.meta.hot))
+}

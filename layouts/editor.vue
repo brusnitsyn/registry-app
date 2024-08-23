@@ -1,7 +1,6 @@
 <script setup lang="ts">
-const { client } = useSanctumFetch()
 
-const { data: registryHeaders } = await useAsyncData('headers', () => client('/api/registry/headers'))
+const { data: registryHeaders } = await useAsyncData('headers', () => useAPI('/api/registry/headers'))
 </script>
 
 <template>
