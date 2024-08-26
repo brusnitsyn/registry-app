@@ -1,6 +1,5 @@
 <script setup lang="ts">
-
-const { data: registryHeaders } = await useAsyncData('headers', () => useAPI('/api/registry/headers'))
+const { data: registryHeaders } = await useAPI('/api/registry/headers')
 </script>
 
 <template>
@@ -9,7 +8,7 @@ const { data: registryHeaders } = await useAsyncData('headers', () => useAPI('/a
       поиск и пр
     </div>
     <div class="grid grid-cols-[auto_1fr]">
-      <CoreRecentRegistryMenu :items="registryHeaders?.data" />
+      <CoreRecentRegistryMenu :items="registryHeaders" />
 
       <div class="max-h-[calc(100vh-20px-20px)] overflow-hidden">
         <slot />

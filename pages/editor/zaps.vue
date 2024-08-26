@@ -46,16 +46,20 @@ const submitSearch = async (e) => {
 
 const hasShowEditPacientAndPersDialog = ref(false)
 const currentZapId = ref(null)
+const fetchingPacient = ref(false)
 
-const openPacientAndPersEditor = (id:number) => {
+const openPacientAndPersEditor = async (id:number) => {
   if (id === null) return
+
+  fetchingPacient.value = true
 
   console.log('fetch pacient')
 
-  currentZapId.value = id
+  await registryStore.fetchPacient(id)
+
   hasShowEditPacientAndPersDialog.value = true
 
-  console.log(currentZapId.value)
+  fetchingPacient.value = false
 }
 </script>
 
@@ -97,7 +101,7 @@ const openPacientAndPersEditor = (id:number) => {
                   </NSpace>
                 </template>
                 <NSpace>
-                    <NButton tertiary @click.prevent="openPacientAndPersEditor(zap.id)">
+                    <NButton :loading="fetchingPacient" tertiary @click="openPacientAndPersEditor(zap.id)">
                       <template #icon>
                         <NaiveIcon name="tabler:user-square-rounded" />
                       </template>
@@ -126,7 +130,7 @@ const openPacientAndPersEditor = (id:number) => {
       <NPagination v-model:page="currentPage" :page-count="registryStore.currentZaps.meta.last_page" />
     </div>
 
-    <LazyDialogEditPaciendAndPers :has-open="hasShowEditPacientAndPersDialog" @update:open="value => hasShowEditPacientAndPersDialog = value" :zap_id="currentZapId" />
+    <DialogEditPaciendAndPers :has-open="hasShowEditPacientAndPersDialog" @update:open="value => hasShowEditPacientAndPersDialog = value" :zap_id="currentZapId" />
   </div>
 </template>
 

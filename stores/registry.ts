@@ -35,30 +35,30 @@ export const useRegistryStore = defineStore('registry', () => {
     const currentPacient = ref<PacientRegistry|null>()
 
     async function fetchZlList(header_id:number|string) {
-        const response = await useAPI('/api/registry/zl-list', {
+        const {data: response} = await useAPI('/api/registry/zl-list', {
             method: 'POST',
             body: {
                 header_id
             }
         })
-        currentZlList.value = response?.data
+        currentZlList.value = response.value
     }
 
     async function fetchHeader(header_id:number|string) {
-        const { data } = await useAPI('/api/registry/header', {
+        const { data: response } = await useAPI('/api/registry/header', {
             method: 'POST',
             body: {
                 header_id
             }
         })
-        console.log(data)
-        currentHeader.value = data?.value
+        console.log(response.value, header_id)
+        currentHeader.value = response.value
     }
 
     async function fetchZaps(zl_list_id:number, page:number|null, search:object|null) {
         const query = {page, ...search}
 
-        const response = await useAPI('/api/registry/zaps', {
+        const {data: response} = await useAPI('/api/registry/zaps', {
             method: 'POST',
             body: {
                 zl_list_id
@@ -66,7 +66,7 @@ export const useRegistryStore = defineStore('registry', () => {
             query
         })
 
-        currentZaps.value = response.data
+        currentZaps.value = response.value
     }
 
     async function fetchPacient(zap_id:number) {
@@ -78,7 +78,9 @@ export const useRegistryStore = defineStore('registry', () => {
             }
         })
 
-        currentPacient.value = response?.data.data
+        currentPacient.value = response.data.value
+
+        return response.data.value
     }
 
     return {

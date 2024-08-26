@@ -26,8 +26,7 @@ const route = useRoute()
 
 const id = computed(() => route.query.header_id)
 
-await registryStore.fetchHeader(id.value)
-console.log(registryStore.currentHeader)
+watch(() => id.value, async () => await registryStore.fetchHeader(id.value))
 
 const hasShowZglvEditDialog = ref(false)
 const hasShowSchetEditDialog = ref(false)
