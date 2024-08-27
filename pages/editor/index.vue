@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { useRouteQuery } from '@vueuse/router'
 type ZglvRegistry = {
   id:number,
   version:string,
@@ -22,11 +23,12 @@ type SchetRegistry = {
 }
 
 const registryStore = useRegistryStore()
-const route = useRoute()
 
-const id = computed(() => route.query.header_id)
+const id = useRouteQuery('header_id')
 
-watch(() => id.value, async () => await registryStore.fetchHeader(id.value))
+await useAsyncData(`header-${id.value}`, () => registryStore.fetchHeader(id.value), {
+  watch: [id]
+})
 
 const hasShowZglvEditDialog = ref(false)
 const hasShowSchetEditDialog = ref(false)

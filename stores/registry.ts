@@ -33,6 +33,7 @@ export const useRegistryStore = defineStore('registry', () => {
     const currentZlList = ref(null)
     const currentZaps = ref(null)
     const currentPacient = ref<PacientRegistry|null>()
+    const currentZsl = ref(null)
 
     async function fetchZlList(header_id:number|string) {
         const {data: response} = await useAPI('/api/registry/zl-list', {
@@ -83,6 +84,19 @@ export const useRegistryStore = defineStore('registry', () => {
         return response.data.value
     }
 
+    async function getZsl(query:object) {
+        const response = await useAPI('/api/registry/zsl', {
+            method: 'GET',
+            query,
+        })
+
+        console.log(response)
+
+        currentZsl.value = response.data.value
+
+        return response.data.value
+    }
+
     return {
         fetchHeader,
         currentHeader,
@@ -91,7 +105,9 @@ export const useRegistryStore = defineStore('registry', () => {
         fetchZaps,
         currentZaps,
         fetchPacient,
-        currentPacient
+        currentPacient,
+        getZsl,
+        currentZsl
     }
 })
 

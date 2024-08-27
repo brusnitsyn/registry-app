@@ -14,13 +14,11 @@ const setQuery = (item) => {
 </script>
 
 <template>
-  <div class="flex flex-col border-r">
-    <NList hoverable clickable>
-      <NListItem v-for="item in items" :key="item.id" @click="setQuery(item)">
-        {{ item.label }}
-      </NListItem>
-    </NList>
-  </div>
+  <NList hoverable clickable>
+    <NListItem v-for="item in items" :key="item.id" @click="setQuery(item)">
+      {{ item.label }}
+    </NListItem>
+  </NList>
 </template>
 
 <style scoped>
