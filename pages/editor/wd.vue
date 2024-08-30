@@ -909,7 +909,7 @@ const uslSlTableColumns = [
     render(row, index) {
       return h(NInput, {
         value: row.idserv,
-        placeholder: row.idserv,
+        status: row.errors.map(err => err.im_pol).indexOf('IDSERV') >= 0 ? 'error': '',
         onUpdateValue(v) {
           const indexRow = getIndexSl(row)
           zapSlZsl.value[indexRow].usl[index].idserv = v
@@ -924,7 +924,7 @@ const uslSlTableColumns = [
     render(row, index) {
       return h(NInput, {
         value: row.lpu,
-        placeholder: row.lpu,
+        status: row.errors.map(err => err.im_pol).indexOf('LPU') >= 0 ? 'error': '',
         onUpdateValue(v) {
           const indexRow = getIndexSl(row)
           zapSlZsl.value[indexRow].usl[index].lpu = v
@@ -939,7 +939,7 @@ const uslSlTableColumns = [
     render(row, index) {
       return h(NInput, {
         value: row.lpu_1,
-        placeholder: row.lpu_1,
+        status: row.errors.map(err => err.im_pol).indexOf('LPU_1') >= 0 ? 'error': '',
         onUpdateValue(v) {
           const indexRow = getIndexSl(row)
           zapSlZsl.value[indexRow].usl[index].lpu_1 = v
@@ -954,7 +954,7 @@ const uslSlTableColumns = [
     render(row, index) {
       return h(NInput, {
         value: row.podr,
-        placeholder: row.podr,
+        status: row.errors.map(err => err.im_pol).indexOf('PODR') >= 0 ? 'error': '',
         onUpdateValue(v) {
           const indexRow = getIndexSl(row)
           zapSlZsl.value[indexRow].usl[index].podr = v
@@ -969,7 +969,7 @@ const uslSlTableColumns = [
     render(row, index) {
       return h(NInput, {
         value: row.profil,
-        placeholder: row.profil,
+        status: row.errors.map(err => err.im_pol).indexOf('PROFIL') >= 0 ? 'error': '',
         onUpdateValue(v) {
           const indexRow = getIndexSl(row)
           zapSlZsl.value[indexRow].usl[index].profil = v
@@ -984,7 +984,7 @@ const uslSlTableColumns = [
     render(row, index) {
       return h(NInput, {
         value: row.vid_vme,
-        placeholder: row.vid_vme,
+        status: row.errors.map(err => err.im_pol).indexOf('VID_VME') >= 0 ? 'error': '',
         onUpdateValue(v) {
           const indexRow = getIndexSl(row)
           zapSlZsl.value[indexRow].usl[index].vid_vme = v
@@ -999,7 +999,7 @@ const uslSlTableColumns = [
     render(row, index) {
       return h(NInput, {
         value: row.det,
-        placeholder: row.det,
+        status: row.errors.map(err => err.im_pol).indexOf('DET') >= 0 ? 'error': '',
         onUpdateValue(v) {
           const indexRow = getIndexSl(row)
           zapSlZsl.value[indexRow].usl[index].det = v
@@ -1014,7 +1014,7 @@ const uslSlTableColumns = [
     render(row, index) {
       return h(NInput, {
         value: row.date_in,
-        placeholder: row.date_in,
+        status: row.errors.map(err => err.im_pol).indexOf('DATE_IN') >= 0 ? 'error': '',
         onUpdateValue(v) {
           const indexRow = getIndexSl(row)
           zapSlZsl.value[indexRow].usl[index].date_in = v
@@ -1029,7 +1029,7 @@ const uslSlTableColumns = [
     render(row, index) {
       return h(NInput, {
         value: row.date_out,
-        placeholder: row.date_out,
+        status: row.errors.map(err => err.im_pol).indexOf('DATE_OUT') >= 0 ? 'error': '',
         onUpdateValue(v) {
           const indexRow = getIndexSl(row)
           zapSlZsl.value[indexRow].usl[index].date_out = v
@@ -1044,11 +1044,12 @@ const uslSlTableColumns = [
     render(row, index) {
       return h(NInput, {
         value: row.ds,
-        placeholder: row.ds,
+        status: row.errors.map(err => err.im_pol).indexOf('DS') >= 0 ? 'error': '',
         onUpdateValue(v) {
           const indexRow = getIndexSl(row)
+          zapSlZsl.value[indexRow].usl[index].errors = []
           zapSlZsl.value[indexRow].usl[index].ds = v
-        }
+        },
       })
     }
   },
@@ -1059,7 +1060,7 @@ const uslSlTableColumns = [
     render(row, index) {
       return h(NInput, {
         value: row.code_usl,
-        placeholder: row.code_usl,
+        status: row.errors.map(err => err.im_pol).indexOf('CODE_USL') >= 0 ? 'error': '',
         onUpdateValue(v) {
           const indexRow = getIndexSl(row)
           zapSlZsl.value[indexRow].usl[index].code_usl = v
@@ -1074,7 +1075,7 @@ const uslSlTableColumns = [
     render(row, index) {
       return h(NInput, {
         value: row.kol_usl,
-        placeholder: row.kol_usl,
+        status: row.errors.map(err => err.im_pol).indexOf('KOL_USL') >= 0 ? 'error': '',
         onUpdateValue(v) {
           const indexRow = getIndexSl(row)
           zapSlZsl.value[indexRow].usl[index].kol_usl = v
@@ -1089,7 +1090,7 @@ const uslSlTableColumns = [
     render(row, index) {
       return h(NInput, {
         value: row.tarif,
-        placeholder: row.tarif,
+        status: row.errors.map(err => err.im_pol).indexOf('TARIF') >= 0 ? 'error': '',
         onUpdateValue(v) {
           const indexRow = getIndexSl(row)
           zapSlZsl.value[indexRow].usl[index].tarif = v
@@ -1104,7 +1105,7 @@ const uslSlTableColumns = [
     render(row, index) {
       return h(NInput, {
         value: row.sumv_usl,
-        placeholder: row.sumv_usl,
+        status: row.errors.map(err => err.im_pol).indexOf('SUMV_USL') >= 0 ? 'error': '',
         onUpdateValue(v) {
           const indexRow = getIndexSl(row)
           zapSlZsl.value[indexRow].usl[index].sumv_usl = v

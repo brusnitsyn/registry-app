@@ -57,8 +57,8 @@ const openZaps = async (zl_list_id:number) => {
   <div v-if="registryStore.currentHeader" class="container max-w-5xl mx-auto py-4">
     <NCollapse :default-expanded-names="[0, 1, 2, 3, 4, 5, 6]">
       <NCollapseItem :name="index" :title="`${zlList.zglv.filename} [${zlList.schet.coments}]`" v-for="(zlList, index) in registryStore.currentHeader.zl_lists">
-        <div class="grid grid-cols-3 gap-x-4">
-          <NCard v-if="zlList.zglv" title="Заголовок файла">
+        <div class="grid grid-cols-3 gap-4">
+          <NCard v-if="zlList.zglv" size="medium" title="Заголовок файла">
             <template #header-extra>
               <NButton quaternary circle @click="openZglvEditor(zlList.zglv)">
                 <template #icon>
@@ -69,7 +69,7 @@ const openZaps = async (zl_list_id:number) => {
             {{ zlList.zglv.filename }}
           </NCard>
 
-          <NCard v-if="zlList.schet" title="Счёт">
+          <NCard v-if="zlList.schet" size="medium" title="Счёт">
             <template #header-extra>
               <NButton quaternary circle @click="openSchetEditor(zlList.schet)">
                 <template #icon>
@@ -85,7 +85,7 @@ const openZaps = async (zl_list_id:number) => {
             </p>
           </NCard>
 
-          <NCard v-if="zlList.schet" title="Записи случаев">
+          <NCard v-if="zlList.schet" size="medium" title="Записи случаев">
             <template #header-extra>
               <NButton quaternary circle @click="openZaps(zlList.id)">
                 <template #icon>
@@ -94,6 +94,22 @@ const openZaps = async (zl_list_id:number) => {
               </NButton>
             </template>
             Записей: {{ zlList.zglv.sd_z }}
+          </NCard>
+
+          <NCard size="medium" title="Ошибки">
+            <template #header-extra>
+              <NButton quaternary circle @click="openZaps(zlList.id)">
+                <template #icon>
+                  <NaiveIcon name="tabler:external-link" />
+                </template>
+              </NButton>
+            </template>
+            <template v-if="zlList.flk_p">
+              {{ zlList.flk_p.fname }}
+            </template>
+            <NButton v-else text>
+              Загрузить файл
+            </NButton>
           </NCard>
         </div>
       </NCollapseItem>

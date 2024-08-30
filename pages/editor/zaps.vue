@@ -7,7 +7,7 @@ const zlListId = useRouteQuery('zl_list_id')
 await useAsyncData('zaps', () => registryStore.fetchZaps(zlListId.value))
 
 const getTitleCard = (zap) => {
-  return `${zap.n_zap} — ${zap.pers.fam} ${zap.pers.im} ${zap.pers.ot}`
+  return `${zap.n_zap} — ${zap.pacient.pers.fam} ${zap.pacient.pers.im} ${zap.pacient.pers.ot}`
 }
 
 const currentPage = computed({
@@ -91,7 +91,13 @@ const toZSlPage = (id:number) => {
               <NCollapseItem :title="getTitleCard(zap)">
                 <template #header-extra>
                   <NSpace>
-                    <NTag round :bordered="false" type="success">
+                    <NTag v-if="zap.count_errors" round :bordered="false" type="error">
+                      Есть ошибки
+                      <template #icon>
+                        <NaiveIcon name="tabler:circle-x" />
+                      </template>
+                    </NTag>
+                    <NTag v-else round :bordered="false" type="success">
                       Ошибок нет
                       <template #icon>
                         <NaiveIcon name="tabler:circle-check" />
