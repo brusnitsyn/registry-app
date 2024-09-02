@@ -51,6 +51,10 @@ const openSchetEditor = (schet:SchetRegistry) => {
 const openZaps = async (zl_list_id:number) => {
   await navigateTo({ name: 'editor-zaps', query: { zl_list_id } })
 }
+
+const openErrors = async (zlListId:number) => {
+  await navigateTo({ name: 'editor-errors', query: { zlListId } })
+}
 </script>
 
 <template>
@@ -98,7 +102,7 @@ const openZaps = async (zl_list_id:number) => {
 
           <NCard size="medium" title="Ошибки">
             <template #header-extra>
-              <NButton quaternary circle @click="openZaps(zlList.id)">
+              <NButton quaternary circle @click="openErrors(zlList.id)">
                 <template #icon>
                   <NaiveIcon name="tabler:external-link" />
                 </template>
