@@ -7,6 +7,8 @@ const zlListId = useRouteQuery('zl_list_id')
 await useAsyncData('zaps', () => registryStore.fetchZaps(zlListId.value))
 
 const getTitleCard = (zap) => {
+  if (zap.pacient.pers === null) return `${zap.n_zap} — нет персональных данных`
+
   return `${zap.n_zap} — ${zap.pacient.pers.fam} ${zap.pacient.pers.im} ${zap.pacient.pers.ot}`
 }
 
