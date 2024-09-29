@@ -1,10 +1,14 @@
 <script setup lang="ts">
-const data = await useRegistryStore().fetchZaps(2)
+import {useHeaderRegistryStore} from "~/stores/headerRegistry";
+
+await useHeaderRegistryStore().getAllRegistryHeader()
+
+
 </script>
 
 <template>
   <pre>
-    {{ useRegistryStore().currentZaps }}
+    {{ useHeaderRegistryStore().registryHeaders }}
   </pre>
 </template>
 
