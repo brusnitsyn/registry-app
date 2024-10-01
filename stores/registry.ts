@@ -36,12 +36,8 @@ export const useRegistryStore = defineStore('registry', () => {
     const currentZsl = ref(null)
 
     async function fetchZlList(header_id:number|string) {
-        const {data: response} = await useAPI('/api/registry/zl-list', {
-            method: 'POST',
-            body: {
-                header_id
-            }
-        })
+        const {data: response} = await useAPI('/api/registry/zl-list')
+
         currentZlList.value = response.value
     }
 

@@ -1,0 +1,128 @@
+<script setup lang="ts">
+import {useZapRegistryStore} from "~/stores/zapRegistry";
+const zlListId = useRoute().query.zlListId
+const zapStore = useZapRegistryStore()
+
+const { zaps } = storeToRefs(zapStore)
+const { getZapsForZlListId } = zapStore
+
+await useAsyncData('zaps', () => getZapsForZlListId(zlListId))
+
+const getTitleCard = (zap) => {
+  if (zap.pacient.pers === null) return `${zap.n_zap} — нет персональных данных`
+
+  return `${zap.n_zap} — ${zap.pacient.pers.fam} ${zap.pacient.pers.im} ${zap.pacient.pers.ot}`
+}
+
+const searchFields = [
+  {
+    type: 'group',
+    label: 'Пациент',
+    children: [
+      { label: 'Фамилия', value: 'fam' },
+      { label: 'СНИЛС', value: 'snils' },
+    ]
+  },
+  {
+    type: 'group',
+    label: 'Запись',
+    children: [
+      { label: 'Номер', value: 'n_zap' },
+      { label: 'Номер карты', value: 'nhistory' },
+    ]
+  },
+]
+
+const selectedSearchField = ref('fam')
+const searchValue = ref('')
+
+const submitSearch = async (e) => {
+  const searchQuery = { search_field: selectedSearchField.value, search_value: searchValue.value }
+  await registryStore.fetchZaps(zlListId.value, 1, searchQuery)
+}
+</script>
+
+<template>
+  <div class="container max-w-5xl mx-auto py-4">
+
+    <NH1>
+      Записи реестра
+    </NH1>
+
+    <div class=" py-4 bg-white sticky top-[0px] z-50">
+      <NForm @submit.prevent="submitSearch">
+        <NInputGroup>
+          <NSelect class="w-1/4" :options="searchFields" placeholder="Поле поиска" v-model:value="selectedSearchField" />
+          <NInput v-model:value="searchValue" placeholder="Значение поиска" />
+          <NButton attr-type="submit">
+            Найти
+          </NButton>
+        </NInputGroup>
+      </NForm>
+    </div>
+
+    <div class="overflow-hidden">
+      <NScrollbar v-if="zaps.data.length">
+        <NSpace vertical>
+          <NCard v-for="zap in zaps.data" :key="zap.id">
+            <NCollapse>
+              <NCollapseItem :title="getTitleCard(zap)">
+                <template #header-extra>
+                  <NSpace>
+                    <NTag v-if="zap.count_errors" round :bordered="false" type="error">
+                      Есть ошибки
+                      <template #icon>
+                        <NaiveIcon name="tabler:circle-x" />
+                      </template>
+                    </NTag>
+                    <NTag v-else round :bordered="false" type="success">
+                      Ошибок нет
+                      <template #icon>
+                        <NaiveIcon name="tabler:circle-check" />
+                      </template>
+                    </NTag>
+                    <!--                    <NTag round :bordered="false">-->
+                    <!--                      {{ format(zap.updated_at, 'dd.MM.yyyy') }}-->
+                    <!--                      <template #icon>-->
+                    <!--                        <NaiveIcon name="tabler:calendar-check" />-->
+                    <!--                      </template>-->
+                    <!--                    </NTag>-->
+                  </NSpace>
+                </template>
+<!--                <NSpace>-->
+<!--                  <NButton :loading="fetchingPacient" tertiary @click="openPacientAndPersEditor(zap.id)">-->
+<!--                    <template #icon>-->
+<!--                      <NaiveIcon name="tabler:user-square-rounded" />-->
+<!--                    </template>-->
+<!--                    Персональные данные-->
+<!--                  </NButton>-->
+<!--                  <NButton tertiary @click="toZSlPage(zap.id)">-->
+<!--                    <template #icon>-->
+<!--                      <NaiveIcon name="tabler:user-square-rounded" />-->
+<!--                    </template>-->
+<!--                    Сведения о законченном случае-->
+<!--                  </NButton>-->
+<!--                </NSpace>-->
+              </NCollapseItem>
+            </NCollapse>
+          </NCard>
+        </NSpace>
+      </NScrollbar>
+      <div v-else class="">
+        <NEmpty description="Нет данных">
+
+        </NEmpty>
+      </div>
+    </div>
+
+<!--    <div v-if="zaps.meta.last_page > 1" class="container max-w-5xl mx-auto py-4">-->
+<!--      <NPagination v-model:page="currentPage" :page-count="zaps.meta.last_page" />-->
+<!--    </div>-->
+
+<!--    <DialogEditPaciendAndPers :has-open="hasShowEditPacientAndPersDialog" @update:open="value => hasShowEditPacientAndPersDialog = value" :zap_id="currentZapId" />-->
+  </div>
+</template>
+
+<style scoped>
+
+</style>
