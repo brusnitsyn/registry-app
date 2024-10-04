@@ -2,6 +2,7 @@
 import xmlFormat from 'xml-formatter'
 import EditorJS from "@editorjs/editorjs"
 import editorjsCodecup from '@calumk/editorjs-codecup'
+import type {Block} from "@babel/types";
 
 const props = defineProps({
   code: String
@@ -10,7 +11,7 @@ const props = defineProps({
 function OBJtoXML(obj) {
   let xml = '';
   for (let prop in obj) {
-    if (obj[prop] == null) continue
+    if (obj[prop] == null || prop === 'id') continue
     xml += obj[prop] instanceof Array ? '' : "<" + prop.toUpperCase() + ">";
     if (obj[prop] instanceof Array) {
       for (let array in obj[prop]) {
@@ -29,10 +30,22 @@ function OBJtoXML(obj) {
   return xml
 }
 
-const editor = ref<EditorJS>(null)
+const editorCode = ref<EditorJS>(null)
+
+watch(() => props.code, (newCode) => {
+  const blockData = {
+    code: formatedXml.value,
+    language: 'XML'
+  }
+  // editorCode.value?.blocks.
+  editorCode.value?.blocks.insert('code', blockData, null, 0, false, true)
+})
+
+// console.log(props.code)
 
 const formatedXml = computed(() => {
   const obj2xml = OBJtoXML(props.code)
+  console.log(obj2xml)
   const xml = xmlFormat(obj2xml, {
     collapseContent: true
   })
@@ -41,7 +54,7 @@ const formatedXml = computed(() => {
 })
 
 onMounted(() => {
-  editor.value = new EditorJS({
+  editorCode.value = new EditorJS({
     holder: 'editor-code',
     readOnly: true,
     tools: {
@@ -55,7 +68,8 @@ onMounted(() => {
           type: 'code',
           data: {
             code: formatedXml.value,
-            language: "XML"
+            language: "XML",
+            showlinenumbers: false
           }
         }
       ]
