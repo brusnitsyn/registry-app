@@ -5,8 +5,10 @@ export const useZapRegistryStore = defineStore('zapRegistry', () => {
     const zaps = ref([])
     const zap = ref({})
 
-    async function getZapsForZlListId(zlListId: number) {
-        const {data, status} = await useAPI(`/api/v1/registry/zap?zlListId=${zlListId}`)
+    async function getZapsForQuery(query: object) {
+        const {data, status} = await useAPI(`/api/v1/registry/zap`, {
+            query
+        })
         if (status.value === 'success') {
             zaps.value = data.value
         }
@@ -63,11 +65,12 @@ export const useZapRegistryStore = defineStore('zapRegistry', () => {
             }
         }
     }
+    async function updateSl()
 
     return {
         zaps,
         zap,
-        getZapsForZlListId,
+        getZapsForQuery,
         getZap,
         updateZap,
         updatePacient,

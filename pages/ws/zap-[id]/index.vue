@@ -68,6 +68,9 @@ function onlyAllowNumber(value: string) {
 }
 
 
+definePageMeta({
+  layout: 'workspace'
+})
 
 </script>
 
@@ -96,16 +99,12 @@ function onlyAllowNumber(value: string) {
                 <NCollapseItem title="Запись">
                   <NForm ref="zapFormRef" :model="zap">
                     <NGrid cols="1" x-gap="12" class="px-5">
-                      <NGi>
-                        <NFormItem label="Номер позиции записи" path="n_zap" :show-feedback="false">
-                          <NInput v-model:value="zap.n_zap" :allow-input="onlyAllowNumber" />
-                        </NFormItem>
-                      </NGi>
-                      <NGi>
-                        <NFormItem path="pr_nov" :show-label="false" :show-feedback="false">
-                          <NCheckbox v-model:checked="zap.pr_nov" label="Признак исправленной записи" checked-value="1" unchecked-value="0" />
-                        </NFormItem>
-                      </NGi>
+                      <NFormItemGi label="Номер позиции записи" path="n_zap" :show-feedback="false">
+                        <NInput v-model:value="zap.n_zap" :allow-input="onlyAllowNumber" />
+                      </NFormItemGi>
+                      <NFormItemGi path="pr_nov" :show-label="false" :show-feedback="false">
+                        <NCheckbox v-model:checked="zap.pr_nov" label="Признак исправленной записи" checked-value="1" unchecked-value="0" />
+                      </NFormItemGi>
                       <NGi span="2">
                         <NFlex justify="end">
                           <NButton secondary @click="updateZap(zap)">
@@ -119,51 +118,33 @@ function onlyAllowNumber(value: string) {
 
                 <NCollapseItem title="Сведения о пациенте">
                   <NGrid cols="2" x-gap="12" class="px-5">
-                    <NGi>
-                      <NFormItem label="Тип документа ОМС" path="pacient.vpolis" >
-                        <NSelect v-model:value="zap.pacient.vpolis" :options="vpolisOptions" />
-                      </NFormItem>
-                    </NGi>
-                    <NGi>
-                      <NFormItem label="Серия документа ОМС" path="pacient.spolis" >
-                        <NInput v-model:value="zap.pacient.spolis" :allow-input="onlyAllowNumber" :disabled="zap.pacient.vpolis != 1" />
-                      </NFormItem>
-                    </NGi>
-                    <NGi>
-                      <NFormItem label="Номер документа, подтверждающего факт страхования по ОМС" path="pacient.npolis">
-                        <NInput v-model:value="zap.pacient.npolis" :allow-input="onlyAllowNumber" />
-                      </NFormItem>
-                    </NGi>
-                    <NGi>
-                      <NFormItem label="Единый номер полиса обязательного медицинского страхования" path="pacient.enp">
-                        <NInput v-model:value="zap.pacient.enp" :allow-input="onlyAllowNumber" />
-                      </NFormItem>
-                    </NGi>
-                    <NGi>
-                      <NFormItem label="Регион страхования" path="pacient.st_okato">
-                        <NInput v-model:value="zap.pacient.st_okato" :allow-input="onlyAllowNumber" :disabled="zap.pacient.vpolis != 1" />
-                      </NFormItem>
-                    </NGi>
-                    <NGi>
-                      <NFormItem label="Реестровый номер СМО" path="pacient.smo">
-                        <NInput v-model:value="zap.pacient.smo" :allow-input="onlyAllowNumber" />
-                      </NFormItem>
-                    </NGi>
-                    <NGi>
-                      <NFormItem label="Группа инвалидности" path="pacient.inv">
-                        <NSelect v-model:value="zap.pacient.inv" :options="invOptions" />
-                      </NFormItem>
-                    </NGi>
-                    <NGi>
-                      <NFormItem label="Признак новорожденного" path="pacient.novor">
-                        <NInput v-model:value="zap.pacient.novor" />
-                      </NFormItem>
-                    </NGi>
-                    <NGi>
-                      <NFormItem path="pacient.mse" :show-label="false" :show-feedback="false">
-                        <NCheckbox v-model:checked="zap.pacient.mse" label="Направление на МСЭ" />
-                      </NFormItem>
-                    </NGi>
+                    <NFormItemGi label="Тип документа ОМС" path="pacient.vpolis" >
+                      <NSelect v-model:value="zap.pacient.vpolis" :options="vpolisOptions" />
+                    </NFormItemGi>
+                    <NFormItemGi label="Серия документа ОМС" path="pacient.spolis" >
+                      <NInput v-model:value="zap.pacient.spolis" :allow-input="onlyAllowNumber" :disabled="zap.pacient.vpolis != 1" />
+                    </NFormItemGi>
+                    <NFormItemGi label="Номер документа, подтверждающего факт страхования по ОМС" path="pacient.npolis">
+                      <NInput v-model:value="zap.pacient.npolis" :allow-input="onlyAllowNumber" />
+                    </NFormItemGi>
+                    <NFormItemGi label="Единый номер полиса обязательного медицинского страхования" path="pacient.enp">
+                      <NInput v-model:value="zap.pacient.enp" :allow-input="onlyAllowNumber" />
+                    </NFormItemGi>
+                    <NFormItemGi label="Регион страхования" path="pacient.st_okato">
+                      <NInput v-model:value="zap.pacient.st_okato" :allow-input="onlyAllowNumber" :disabled="zap.pacient.vpolis != 1" />
+                    </NFormItemGi>
+                    <NFormItemGi label="Реестровый номер СМО" path="pacient.smo">
+                      <NInput v-model:value="zap.pacient.smo" :allow-input="onlyAllowNumber" />
+                    </NFormItemGi>
+                    <NFormItemGi label="Группа инвалидности" path="pacient.inv">
+                      <NSelect v-model:value="zap.pacient.inv" :options="invOptions" />
+                    </NFormItemGi>
+                    <NFormItemGi label="Признак новорожденного" path="pacient.novor">
+                      <NInput v-model:value="zap.pacient.novor" placeholder="ПДДММГГНН" />
+                    </NFormItemGi>
+                    <NFormItemGi path="pacient.mse" :show-label="false" :show-feedback="false">
+                      <NCheckbox v-model:checked="zap.pacient.mse" label="Направление на МСЭ" />
+                    </NFormItemGi>
                     <NGi span="2">
                       <NFlex justify="end">
                         <NButton secondary @click="updatePacient(zap.pacient)">
@@ -176,106 +157,66 @@ function onlyAllowNumber(value: string) {
 
                 <NCollapseItem title="Сведения о законченном случае">
                   <NGrid cols="2" x-gap="12" class="px-5">
-                    <NGi>
-                      <NFormItem label="Номер записи в реестре случаев" path="z_sl.idcase" >
-                        <NInput v-model:value="zap.z_sl.idcase" placeholder="1" />
-                      </NFormItem>
-                    </NGi>
-                    <NGi>
-                      <NFormItem label="Условия оказания медицинской помощи" path="z_sl.usl_ok" >
-                        <NInput v-model:value="zap.z_sl.usl_ok" placeholder="1" />
-                      </NFormItem>
-                    </NGi>
-                    <NGi>
-                      <NFormItem label="Вид медицинской помощи" path="z_sl.vidpom">
-                        <NInput v-model:value="zap.z_sl.vidpom" placeholder="1" />
-                      </NFormItem>
-                    </NGi>
-                    <NGi>
-                      <NFormItem label="Форма оказания медицинской помощи" path="z_sl.for_pom">
-                        <NInput v-model:value="zap.z_sl.for_pom" placeholder="1" />
-                      </NFormItem>
-                    </NGi>
-                    <NGi>
-                      <NFormItem label="Код МО, направившей на лечение" path="z_sl.npr_mo">
-                        <NInput v-model:value="zap.z_sl.npr_mo" placeholder="1" />
-                      </NFormItem>
-                    </NGi>
-                    <NGi>
-                      <NFormItem label="Дата направления на лечение" path="z_sl.npr_date">
-                        <NDatePicker v-model:formatted-value="zap.z_sl.npr_date" value-format="yyyy-MM-dd" class="w-full" />
-                      </NFormItem>
-                    </NGi>
-                    <NGi>
-                      <NFormItem label="Код МО" path="z_sl.lpu">
-                        <NInput v-model:value="zap.z_sl.lpu" placeholder="1" />
-                      </NFormItem>
-                    </NGi>
-                    <NGi>
-                      <NFormItem label="Дата начала лечения" path="z_sl.date_z_1">
-                        <NDatePicker v-model:formatted-value="zap.z_sl.date_z_1" value-format="yyyy-MM-dd" class="w-full" />
-                      </NFormItem>
-                    </NGi>
-                    <NGi>
-                      <NFormItem label="Дата окончания лечения" path="z_sl.date_z_2">
-                        <NDatePicker v-model:formatted-value="zap.z_sl.date_z_2" value-format="yyyy-MM-dd" class="w-full" />
-                      </NFormItem>
-                    </NGi>
-                    <NGi>
-                      <NFormItem label="Результат диспансеризации" path="z_sl.rslt_d">
-                        <NInput v-model:value="zap.z_sl.rslt_d" placeholder="1" />
-                      </NFormItem>
-                    </NGi>
-                    <NGi>
-                      <NFormItem label="Продолжительность госпитализации" path="z_sl.kd_z">
-                        <NInput v-model:value="zap.z_sl.kd_z" placeholder="1" />
-                      </NFormItem>
-                    </NGi>
-                    <NGi>
-                      <NFormItem label="Вес при рождении" path="z_sl.vnov_m">
-                        <NInput v-model:value="zap.z_sl.vnov_m" placeholder="1" />
-                      </NFormItem>
-                    </NGi>
-                    <NGi>
-                      <NFormItem label="Результат обращения" path="z_sl.rslt">
-                        <NInput v-model:value="zap.z_sl.rslt" placeholder="1" />
-                      </NFormItem>
-                    </NGi>
-                    <NGi>
-                      <NFormItem label="Исход заболевания" path="z_sl.ishod">
-                        <NInput v-model:value="zap.z_sl.ishod" placeholder="1" />
-                      </NFormItem>
-                    </NGi>
-                    <NGi>
-                      <NFormItem label="Особый случай" path="z_sl.os_sluch">
-                        <NInput v-model:value="zap.z_sl.os_sluch" placeholder="1" />
-                      </NFormItem>
-                    </NGi>
-                    <NGi>
-                      <NFormItem label="Код способа оплаты медицинской помощи" path="z_sl.idsp">
-                        <NInput v-model:value="zap.z_sl.idsp" placeholder="1" />
-                      </NFormItem>
-                    </NGi>
-                    <NGi>
-                      <NFormItem label="Сумма, выставленная к оплате" path="z_sl.sumv">
-                        <NInput v-model:value="zap.z_sl.sumv" placeholder="1" />
-                      </NFormItem>
-                    </NGi>
-                    <NGi span="2">
-                      <NFormItem path="z_sl.vbr" :show-label="false" :show-feedback="false">
-                        <NCheckbox v-model:checked="zap.z_sl.vbr" checked-value="1" unchecked-value="0" label="Признак мобильной медицинской бригады" />
-                      </NFormItem>
-                    </NGi>
-                    <NGi span="2">
-                      <NFormItem path="z_sl.p_otk" :show-label="false" :show-feedback="false">
-                        <NCheckbox v-model:checked="zap.z_sl.p_otk" checked-value="1" unchecked-value="0" label="Признак отказа" />
-                      </NFormItem>
-                    </NGi>
-                    <NGi span="2">
-                      <NFormItem path="z_sl.vb_p" :show-label="false" :show-feedback="false">
-                        <NCheckbox v-model:checked="zap.z_sl.vb_p" checked-value="1" unchecked-value="0" label="Признак внутрибольничного перевода" />
-                      </NFormItem>
-                    </NGi>
+                    <NFormItemGi label="Номер записи в реестре случаев" path="z_sl.idcase" >
+                      <NInput v-model:value="zap.z_sl.idcase" placeholder="1" />
+                    </NFormItemGi>
+                    <NFormItemGi label="Условия оказания медицинской помощи" path="z_sl.usl_ok" >
+                      <NInput v-model:value="zap.z_sl.usl_ok" placeholder="1" />
+                    </NFormItemGi>
+                    <NFormItemGi label="Вид медицинской помощи" path="z_sl.vidpom">
+                      <NInput v-model:value="zap.z_sl.vidpom" placeholder="1" />
+                    </NFormItemGi>
+                    <NFormItemGi label="Форма оказания медицинской помощи" path="z_sl.for_pom">
+                      <NInput v-model:value="zap.z_sl.for_pom" placeholder="1" />
+                    </NFormItemGi>
+                    <NFormItemGi label="Код МО, направившей на лечение" path="z_sl.npr_mo">
+                      <NInput v-model:value="zap.z_sl.npr_mo" placeholder="1" />
+                    </NFormItemGi>
+                    <NFormItemGi label="Дата направления на лечение" path="z_sl.npr_date">
+                      <NDatePicker v-model:formatted-value="zap.z_sl.npr_date" value-format="yyyy-MM-dd" class="w-full" />
+                    </NFormItemGi>
+                    <NFormItemGi label="Код МО" path="z_sl.lpu">
+                      <NInput v-model:value="zap.z_sl.lpu" placeholder="1" />
+                    </NFormItemGi>
+                    <NFormItemGi label="Дата начала лечения" path="z_sl.date_z_1">
+                      <NDatePicker v-model:formatted-value="zap.z_sl.date_z_1" value-format="yyyy-MM-dd" class="w-full" />
+                    </NFormItemGi>
+                    <NFormItemGi label="Дата окончания лечения" path="z_sl.date_z_2">
+                      <NDatePicker v-model:formatted-value="zap.z_sl.date_z_2" value-format="yyyy-MM-dd" class="w-full" />
+                    </NFormItemGi>
+                    <NFormItemGi label="Результат диспансеризации" path="z_sl.rslt_d">
+                      <NInput v-model:value="zap.z_sl.rslt_d" placeholder="1" />
+                    </NFormItemGi>
+                    <NFormItemGi label="Продолжительность госпитализации" path="z_sl.kd_z">
+                      <NInput v-model:value="zap.z_sl.kd_z" placeholder="1" />
+                    </NFormItemGi>
+                    <NFormItemGi label="Вес при рождении" path="z_sl.vnov_m">
+                      <NInput v-model:value="zap.z_sl.vnov_m" placeholder="1" />
+                    </NFormItemGi>
+                    <NFormItemGi label="Результат обращения" path="z_sl.rslt">
+                      <NInput v-model:value="zap.z_sl.rslt" placeholder="1" />
+                    </NFormItemGi>
+                    <NFormItemGi label="Исход заболевания" path="z_sl.ishod">
+                      <NInput v-model:value="zap.z_sl.ishod" placeholder="1" />
+                    </NFormItemGi>
+                    <NFormItemGi label="Особый случай" path="z_sl.os_sluch">
+                      <NInput v-model:value="zap.z_sl.os_sluch" placeholder="1" />
+                    </NFormItemGi>
+                    <NFormItemGi label="Код способа оплаты медицинской помощи" path="z_sl.idsp">
+                      <NInput v-model:value="zap.z_sl.idsp" placeholder="1" />
+                    </NFormItemGi>
+                    <NFormItemGi label="Сумма, выставленная к оплате" path="z_sl.sumv">
+                      <NInput v-model:value="zap.z_sl.sumv" placeholder="1" />
+                    </NFormItemGi>
+                    <NFormItemGi span="2" path="z_sl.vbr" :show-label="false" :show-feedback="false">
+                      <NCheckbox v-model:checked="zap.z_sl.vbr" checked-value="1" unchecked-value="0" label="Признак мобильной медицинской бригады" />
+                    </NFormItemGi>
+                    <NFormItemGi span="2" path="z_sl.p_otk" :show-label="false" :show-feedback="false">
+                      <NCheckbox v-model:checked="zap.z_sl.p_otk" checked-value="1" unchecked-value="0" label="Признак отказа" />
+                    </NFormItemGi>
+                    <NFormItemGi span="2" path="z_sl.vb_p" :show-label="false" :show-feedback="false">
+                      <NCheckbox v-model:checked="zap.z_sl.vb_p" checked-value="1" unchecked-value="0" label="Признак внутрибольничного перевода" />
+                    </NFormItemGi>
 
                     <NGi span="2">
                       <NFlex justify="end">
@@ -286,6 +227,7 @@ function onlyAllowNumber(value: string) {
                     </NGi>
                   </NGrid>
                 </NCollapseItem>
+
                 <template v-for="(sl, index) in zap.z_sl.sl">
                   <NCollapseItem :title="`Сведения о случае ${sl.sl_id}`">
                     <NSpace vertical class="px-5">

@@ -1,12 +1,16 @@
 <script setup lang="ts">
-import {useZapRegistryStore} from "~/stores/zapRegistry";
+import {useZapRegistryStore} from "~/stores/zapRegistry"
+import {
+    IconCircleX,
+    IconCircleCheck
+} from '@tabler/icons-vue'
 const zlListId = useRoute().query.zlListId
 const zapStore = useZapRegistryStore()
 
 const { zaps } = storeToRefs(zapStore)
-const { getZapsForZlListId } = zapStore
+const { getZapsForQuery } = zapStore
 
-await useAsyncData('zaps', () => getZapsForZlListId(zlListId))
+await useAsyncData('zaps', () => getZapsForQuery(zlListId))
 
 const getTitleCard = (zap) => {
   if (zap.pacient.pers === null) return `${zap.n_zap} — нет персональных данных`
@@ -27,7 +31,7 @@ const searchFields = [
     type: 'group',
     label: 'Запись',
     children: [
-      { label: 'Номер', value: 'n_zap' },
+      { label: 'Номер записи', value: 'n_zap' },
       { label: 'Номер карты', value: 'nhistory' },
     ]
   },
@@ -37,24 +41,27 @@ const selectedSearchField = ref('fam')
 const searchValue = ref('')
 
 const submitSearch = async (e) => {
-  const searchQuery = { search_field: selectedSearchField.value, search_value: searchValue.value }
-  await registryStore.fetchZaps(zlListId.value, 1, searchQuery)
+  const searchQuery = { search_field: selectedSearchField.value, search_value: searchValue.value, page: 1, zlListId }
+  await zapStore.getZapsForQuery(searchQuery)
 }
+
+definePageMeta({
+  layout: 'workspace'
+})
 </script>
 
 <template>
   <div class="container max-w-5xl mx-auto py-4">
+<!--    <NH1>-->
+<!--      Записи реестра-->
+<!--    </NH1>-->
 
-    <NH1>
-      Записи реестра
-    </NH1>
-
-    <div class=" py-4 bg-white sticky top-[0px] z-50">
+    <div class=" py-4 bg-white sticky top-0 z-50">
       <NForm @submit.prevent="submitSearch">
         <NInputGroup>
-          <NSelect class="w-1/4" :options="searchFields" placeholder="Поле поиска" v-model:value="selectedSearchField" />
-          <NInput v-model:value="searchValue" placeholder="Значение поиска" />
-          <NButton attr-type="submit">
+          <NSelect class="w-1/4" :options="searchFields" placeholder="Поле поиска" v-model:value="selectedSearchField" size="large" />
+          <NInput v-model:value="searchValue" placeholder="Значение поиска" size="large" />
+          <NButton attr-type="submit" size="large">
             Найти
           </NButton>
         </NInputGroup>
@@ -69,16 +76,21 @@ const submitSearch = async (e) => {
               <NCollapseItem :title="getTitleCard(zap)">
                 <template #header-extra>
                   <NSpace>
+                    <NButton @click="navigateTo({ name: 'ws-zap-id', params: { id: zap.id } })">
+                      <template #default>
+                        Перейти к записи
+                      </template>
+                    </NButton>
                     <NTag v-if="zap.count_errors" round :bordered="false" type="error">
                       Есть ошибки
                       <template #icon>
-                        <NaiveIcon name="tabler:circle-x" />
+                        <NIcon :component="IconCircleX" />
                       </template>
                     </NTag>
                     <NTag v-else round :bordered="false" type="success">
                       Ошибок нет
                       <template #icon>
-                        <NaiveIcon name="tabler:circle-check" />
+                        <NIcon :component="IconCircleCheck" />
                       </template>
                     </NTag>
                     <!--                    <NTag round :bordered="false">-->

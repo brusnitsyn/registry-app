@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@calumk/editorjs-codecup": "^1.2.0",
+    "@css-render/vue3-ssr": "^0.15.14",
     "@editorjs/code": "^2.9.2",
     "@editorjs/editorjs": "^2.30.6",
     "@pinia/nuxt": "^0.5.3",
@@ -22,19 +23,21 @@
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "nuxt": "^3.12.4",
+    "nuxtjs-naive-ui": "^1.0.2",
     "pinia": "^2.2.2",
     "radix-vue": "^1.9.4",
-    "shadcn-nuxt": "^0.10.4",
     "tailwind-merge": "^2.5.2",
     "tailwindcss-animate": "^1.0.7",
+    "unplugin-auto-import": "^0.18.3",
+    "unplugin-vue-components": "^0.27.4",
     "vee-validate": "^4.13.2",
     "vue": "latest",
     "xml-formatter": "^3.6.3",
     "zod": "^3.23.8"
   },
   "devDependencies": {
-    "@bg-dev/nuxt-naiveui": "^2.0.0-rc.1",
     "@nuxtjs/tailwindcss": "^6.12.1",
+    "naive-ui": "^2.40.1",
     "typescript": "latest"
   },
   "overrides": {

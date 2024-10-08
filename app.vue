@@ -4,10 +4,13 @@ import { ruRU, dateRuRU } from 'naive-ui'
 
 <template>
   <NConfigProvider :locale="ruRU" :date-locale="dateRuRU">
-    <NaiveConfig>
-      <NuxtLayout>
-        <NuxtPage />
-      </NuxtLayout>
-    </NaiveConfig>
+    <NMessageProvider>
+      <NDialogProvider>
+        <NuxtLayout>
+          <NuxtPage />
+        </NuxtLayout>
+      </NDialogProvider>
+    </NMessageProvider>
+
   </NConfigProvider>
 </template>
