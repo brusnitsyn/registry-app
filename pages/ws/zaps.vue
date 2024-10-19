@@ -72,35 +72,43 @@ definePageMeta({
       <NScrollbar v-if="zaps.data.length">
         <NSpace vertical>
           <NCard v-for="zap in zaps.data" :key="zap.id">
-            <NCollapse>
-              <NCollapseItem :title="getTitleCard(zap)">
-                <template #header-extra>
-                  <NSpace>
-                    <NButton @click="navigateTo({ name: 'ws-zap-id', params: { id: zap.id } })">
-                      <template #default>
-                        Перейти к записи
-                      </template>
-                    </NButton>
-                    <NTag v-if="zap.count_errors" round :bordered="false" type="error">
-                      Есть ошибки
-                      <template #icon>
-                        <NIcon :component="IconCircleX" />
-                      </template>
-                    </NTag>
-                    <NTag v-else round :bordered="false" type="success">
-                      Ошибок нет
-                      <template #icon>
-                        <NIcon :component="IconCircleCheck" />
-                      </template>
-                    </NTag>
+            <NFlex justify="space-between" align="center">
+              <NText>{{ getTitleCard(zap) }}</NText>
+              <NButton secondary @click="navigateTo({ name: 'ws-zap-id', params: { id: zap.id } })">
+                <template #default>
+                  Перейти к записи
+                </template>
+              </NButton>
+            </NFlex>
+<!--            <NCollapse>-->
+<!--              <NCollapseItem :title="getTitleCard(zap)">-->
+<!--                <template #header-extra>-->
+<!--                  <NSpace>-->
+<!--                    <NButton @click="navigateTo({ name: 'ws-zap-id', params: { id: zap.id } })">-->
+<!--                      <template #default>-->
+<!--                        Перейти к записи-->
+<!--                      </template>-->
+<!--                    </NButton>-->
+                    <!--                    <NTag v-if="zap.count_errors" round :bordered="false" type="error">-->
+                    <!--                      Есть ошибки-->
+                    <!--                      <template #icon>-->
+                    <!--                        <NIcon :component="IconCircleX" />-->
+                    <!--                      </template>-->
+                    <!--                    </NTag>-->
+                    <!--                    <NTag v-else round :bordered="false" type="success">-->
+                    <!--                      Ошибок нет-->
+                    <!--                      <template #icon>-->
+                    <!--                        <NIcon :component="IconCircleCheck" />-->
+                    <!--                      </template>-->
+                    <!--                    </NTag>-->
                     <!--                    <NTag round :bordered="false">-->
                     <!--                      {{ format(zap.updated_at, 'dd.MM.yyyy') }}-->
                     <!--                      <template #icon>-->
                     <!--                        <NaiveIcon name="tabler:calendar-check" />-->
                     <!--                      </template>-->
                     <!--                    </NTag>-->
-                  </NSpace>
-                </template>
+<!--                  </NSpace>-->
+<!--                </template>-->
 <!--                <NSpace>-->
 <!--                  <NButton :loading="fetchingPacient" tertiary @click="openPacientAndPersEditor(zap.id)">-->
 <!--                    <template #icon>-->
@@ -115,8 +123,8 @@ definePageMeta({
 <!--                    Сведения о законченном случае-->
 <!--                  </NButton>-->
 <!--                </NSpace>-->
-              </NCollapseItem>
-            </NCollapse>
+<!--              </NCollapseItem>-->
+<!--            </NCollapse>-->
           </NCard>
         </NSpace>
       </NScrollbar>
