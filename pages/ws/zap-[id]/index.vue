@@ -15,7 +15,7 @@ const tab = computed({
 
 const zapStore = useZapRegistryStore()
 const pacientStore = usePacientRegistryStore()
-const { getZap, updateZap, updatePacient, updateZSl } = zapStore
+const { getZap, updateZap, updatePacient, updateZSl, updateSl } = zapStore
 const { zap } = storeToRefs(zapStore)
 const { vpolisOptions, invOptions } = storeToRefs(pacientStore)
 await getZap(zapId)
@@ -409,6 +409,14 @@ definePageMeta({
                         <NFormItemGi span="2" path="sl.reab" :show-label="false" :show-feedback="false">
                           <NCheckbox v-model:checked="sl.reab" checked-value="1" unchecked-value="0" label="Признак реабилитации" />
                         </NFormItemGi>
+
+                        <NGi span="2">
+                          <NFlex justify="end">
+                            <NButton secondary @click="updateSl(sl)">
+                              Сохранить только этот блок
+                            </NButton>
+                          </NFlex>
+                        </NGi>
                       </NGrid>
                     </NSpace>
                   </NCollapseItem>
@@ -426,7 +434,7 @@ definePageMeta({
                 <NCollapse>
                   <NCollapseItem title="Персональные данные">
                     <NForm ref="persFormRef" :model="persRef">
-                      <NGrid cols="2" x-gap="12">
+                      <NGrid cols="2" x-gap="12" class="px-5">
                         <NFormItemGi label="Фамилия" path="fam">
                           <NInput v-model:value="persRef.fam" placeholder="1" />
                         </NFormItemGi>
@@ -519,7 +527,7 @@ definePageMeta({
                 <NCollapse>
                   <NCollapseItem v-for="(napr, index) in naprRef" :title="`${napr.napr_date}: Сведения об оформлении направления (${napr.napr_usl})`">
                     <NForm ref="zapFormRef" :model="napr">
-                      <NGrid cols="2" x-gap="12">
+                      <NGrid cols="2" x-gap="12" class="px-5">
                         <NFormItemGi label="Дата направления" :path="`${index}`">
                           <NDatePicker v-model:formatted-value="napr.napr_date" value-format="yyyy-MM-dd" class="w-full" />
                         </NFormItemGi>
@@ -552,7 +560,7 @@ definePageMeta({
                 <NCollapse>
                   <NCollapseItem title="Сведения о проведении консилиума">
                     <NForm ref="zapFormRef" :model="consRef">
-                      <NGrid cols="2" x-gap="12">
+                      <NGrid cols="2" x-gap="12" class="px-5">
                         <NFormItemGi label="Цель проведения консилиума" path="pr_cons">
                           <NInput v-model:value="consRef.napr_date" placeholder="1" />
                         </NFormItemGi>
@@ -576,7 +584,7 @@ definePageMeta({
                 <NCollapse>
                   <NCollapseItem title="Сведения о случае лечения онкологического заболевания">
                     <NForm ref="onkSlFormRef" :model="onkSlRef">
-                      <NGrid cols="2" x-gap="12">
+                      <NGrid cols="2" x-gap="12" class="px-5">
                         <NFormItemGi label="Повод обращения" path="ds1_t">
                           <NInput v-model:value="onkSlRef.ds1_t" placeholder="1" />
                         </NFormItemGi>
@@ -677,7 +685,7 @@ definePageMeta({
                 <NCollapse>
                   <NCollapseItem v-for="(lekPr, index) in lekPrRef" :title="`${lekPr.date_inj}: Сведения о введенном лекарственном препарате (${lekPr.regnum})`">
                     <NForm ref="zapFormRef" :model="lekPr">
-                      <NGrid cols="2" x-gap="12">
+                      <NGrid cols="2" x-gap="12" class="px-5">
                         <NGi>
                           <NFormItem label="Дата введения" path="date_inj">
                             <NInput v-model:value="lekPr.date_inj" placeholder="1" />
@@ -710,7 +718,7 @@ definePageMeta({
                 <NCollapse>
                   <NCollapseItem v-for="(lekPr, index) in lekPrRef" :title="`${lekPr.date_inj}: Сведения о введенном лекарственном препарате (${lekPr.regnum})`">
                     <NForm ref="zapFormRef" :model="lekPr">
-                      <NGrid cols="2" x-gap="12">
+                      <NGrid cols="2" x-gap="12" class="px-5">
                         <NFormItemGi label="Дата введения" path="date_inj">
                           <NInput v-model:value="lekPr.date_inj" placeholder="1" />
                         </NFormItemGi>
@@ -737,7 +745,7 @@ definePageMeta({
                 <NCollapse>
                   <NCollapseItem v-for="(ds2n, index) in ds2NRef" :title="`$Сопутствующее заболевание (${ds2n.ds2})`">
                     <NForm ref="zapFormRef" :model="ds2n">
-                      <NGrid cols="2" x-gap="12">
+                      <NGrid cols="2" x-gap="12" class="px-5">
                         <NFormItemGi label="Диагноз сопутствующего заболевания" path="ds2">
                           <NInput v-model:value="ds2n.ds2" placeholder="1" />
                         </NFormItemGi>
@@ -767,7 +775,7 @@ definePageMeta({
                 <NCollapse>
                   <NCollapseItem v-for="(naz, index) in nazRef" :title="`$Сведения об оформлении направления (${naz.naz_z})`">
                     <NForm ref="zapFormRef" :model="naz">
-                      <NGrid cols="2" x-gap="12">
+                      <NGrid cols="2" x-gap="12" class="px-5">
                         <NFormItemGi label="Номер по порядку" path="naz_n">
                           <NInput v-model:value="naz.naz_n" placeholder="1" />
                         </NFormItemGi>

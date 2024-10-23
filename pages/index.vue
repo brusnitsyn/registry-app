@@ -15,7 +15,7 @@ import { NIcon } from 'naive-ui'
 const headerRegistryStore = useHeaderRegistryStore()
 
 const { registryHeaders } = storeToRefs(headerRegistryStore)
-const { getAllRegistryHeader, deleteRegistryHeader } = headerRegistryStore
+const { getAllRegistryHeader, deleteRegistryHeader, compileRegistry } = headerRegistryStore
 const message = useMessage()
 const dialog = useDialog()
 
@@ -80,6 +80,9 @@ function optionSelect(key: string|number, headerRegistryId:number) {
   switch (key) {
     case 'remove':
       deleteRegistry(headerRegistryId)
+      break
+    case 'download':
+      compileRegistry(headerRegistryId)
       break
   }
 }

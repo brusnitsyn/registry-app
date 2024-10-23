@@ -65,7 +65,28 @@ export const useZapRegistryStore = defineStore('zapRegistry', () => {
             }
         }
     }
-    async function updateSl()
+
+    async function updateSl(slData: object) {
+        const { data, status } = await useAPI(`/api/v1/registry/sl`, {
+            method: "PUT",
+            body: slData
+        })
+
+        if (status.value === 'success') {
+
+        }
+    }
+
+    async function updateCons(consData: object) {
+        const { data, status } = await useAPI(`/api/v1/registry/cons`, {
+            method: "PUT",
+            body: consData
+        })
+
+        if (status.value === 'success') {
+
+        }
+    }
 
     return {
         zaps,
@@ -74,7 +95,8 @@ export const useZapRegistryStore = defineStore('zapRegistry', () => {
         getZap,
         updateZap,
         updatePacient,
-        updateZSl
+        updateZSl,
+        updateSl
     }
 })
 

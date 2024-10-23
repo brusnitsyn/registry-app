@@ -10,7 +10,7 @@ const zapStore = useZapRegistryStore()
 const { zaps } = storeToRefs(zapStore)
 const { getZapsForQuery } = zapStore
 
-await useAsyncData('zaps', () => getZapsForQuery(zlListId))
+await useAsyncData('zaps', () => getZapsForQuery({zlListId}))
 
 const getTitleCard = (zap) => {
   if (zap.pacient.pers === null) return `${zap.n_zap} — нет персональных данных`

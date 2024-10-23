@@ -25,10 +25,21 @@ export const useHeaderRegistryStore = defineStore('headerRegistry', () => {
         return false
     }
 
+    async function compileRegistry(headerRegistryId: number) {
+        const { status } = await useAPI(`/api/registry/compile?registry=${headerRegistryId}`)
+
+        if (status.value === 'success') {
+            return true
+        }
+
+        return false
+    }
+
     return {
         registryHeaders,
         getAllRegistryHeader,
-        deleteRegistryHeader
+        deleteRegistryHeader,
+        compileRegistry
     }
 })
 
