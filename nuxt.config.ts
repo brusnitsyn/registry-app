@@ -6,7 +6,12 @@ import { NaiveUiResolver } from 'unplugin-vue-components/resolvers'
 export default defineNuxtConfig({
   compatibilityDate: '2024-04-03',
   devtools: { enabled: true },
-  modules: ["@nuxtjs/tailwindcss", "@pinia/nuxt", "nuxtjs-naive-ui"],
+  modules: [
+    "@nuxtjs/tailwindcss",
+    "@pinia/nuxt",
+    "nuxtjs-naive-ui",
+    'nuxt-monaco-editor'
+  ],
   pinia: {
     storesDirs: ['./stores/**'],
   },

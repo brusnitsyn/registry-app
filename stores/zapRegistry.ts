@@ -14,8 +14,10 @@ export const useZapRegistryStore = defineStore('zapRegistry', () => {
         }
     }
 
-    async function getZap(zapId: number) {
-        const {data, status} = await useAPI(`/api/v1/registry/zap/${zapId}`)
+    async function getZap(zapId: number, query: object) {
+        const {data, status} = await useAPI(`/api/v1/registry/zap/${zapId}`, {
+            query
+        })
         if (status.value === 'success') {
             zap.value = data.value
         }
