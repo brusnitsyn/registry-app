@@ -1,6 +1,6 @@
 <script setup>
 import {breakpointsTailwind, useBreakpoints, useFetch, useLocalStorage} from "@vueuse/core";
-import {NFlex, NIcon} from "naive-ui";
+import {NEl, NFlex, NIcon} from "naive-ui";
 import {Selector, SquarePlus} from "@vicons/tabler";
 import {Link, router, usePrefetch} from "@inertiajs/vue3";
 import Modal from "../modal/Modal.vue";
@@ -24,8 +24,9 @@ const renderIcon = (icon) => {
 const options = [
     {
         type: 'group',
-        label: 'Доступные реестры', //: 'Нет доступных реестров',
+        label: 'Доступные реестры',
         key: 'registry',
+        show: menuFile.value.length > 0,
         children: [
             {
                 label: '2025.02',
@@ -34,6 +35,18 @@ const options = [
                 selected: true,
             }
         ],
+    },
+    {
+        type: 'render',
+        key: 'no-available',
+        show: menuFile.value.length === 0,
+        render: () => h(
+            NEl,
+            {
+                style: 'padding: 4px 12px; color: var(--text-color-1)'
+            },
+            'Нет доступных реестров'
+        )
     },
     {
         type: 'divider',
@@ -60,9 +73,16 @@ const selectOption = (option) => {
 }
 
 onMounted(async () => {
-    const {data, isFetching} = await useFetch(route('api.registry.files')).json()
+    const {data, isFetching, error} = await useFetch(route('api.registry.files')).json()
+
     isComponentFetching.value = isFetching.value
-    menuFile.value = data.value
+    if (error) {
+        return
+    }
+    if (data.value.length > 0) {
+        console.log(data.value.length)
+        menuFile.value = data.value
+    }
 })
 </script>
 

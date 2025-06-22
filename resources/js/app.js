@@ -4,7 +4,6 @@ import { createApp, h } from 'vue'
 import { createInertiaApp } from '@inertiajs/vue3'
 import { ZiggyVue } from 'ziggy-js';
 import AppLayout from "./layouts/AppLayout.vue";
-import VueApexCharts from "vue3-apexcharts";
 
 createInertiaApp({
     resolve: name => {
@@ -17,7 +16,6 @@ createInertiaApp({
         createApp({render: () => h(App, props)})
             .use(plugin)
             .use(ZiggyVue)
-            .use(VueApexCharts)
             .mount(el)
     },
 })

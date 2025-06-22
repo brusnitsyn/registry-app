@@ -20,7 +20,7 @@ return new class extends Migration
             $table->decimal('tariff', 14);
             $table->decimal('sum', 14);
             $table->decimal('count', 5);
-            $table->string('department_code');
+            $table->string('department_code')->nullable();
             $table->string('doctor_speciality')->nullable();
             $table->string('doctor_id')->nullable();
             $table->foreignIdFor(\App\Models\RegistryCase::class, 'case_id');

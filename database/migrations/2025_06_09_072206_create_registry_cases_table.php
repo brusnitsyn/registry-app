@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('id_case');
             $table->string('treatment_type');
-            $table->string('result');
+            $table->string('result')->nullable();
             $table->string('outcome');
             $table->string('total_sum');
             $table->string('diagnosis');
