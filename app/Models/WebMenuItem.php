@@ -18,6 +18,7 @@ class WebMenuItem extends Model
     public $timestamps = false;
 
     protected $fillable = [
+        'type',
         'label',
         'route',
         'icon',

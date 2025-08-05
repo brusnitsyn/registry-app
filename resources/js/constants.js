@@ -1,0 +1,31 @@
+export const registryType = {
+    MAIN_REGISTRY: 'Основной',
+    ONCOLOGY_REGISTRY: 'Онкологический',
+    HIGHTECH_CARE: 'ВМП',
+    STAGE1_ADULT: '1 эт. ДВ',
+    STAGE2_ADULT: '2 эт. ДВ',
+    ADULT_CHECKUPS: 'ПО взрослых',
+    MINORS_CHECKUPS: 'ПО несоверш.',
+    ORPHANS_SCREENING: 'ДД детей-сирот',
+    WARDS_SCREENING: 'ДД детей без попечения',
+    STAGE1_ADVANCED: '1 эт. УГ ДД',
+    STAGE2_ADVANCED: '2 эт. УГ ДД',
+    STAGE1_REPRODUCTIVE: 'ДР 1 эт.',
+    STAGE2_REPRODUCTIVE: 'ДР 2 эт.',
+}
+
+export const registryComment = {
+    COMMENT_MAIN_REGISTRY: 'Основной реестр',
+    COMMENT_ONCOLOGY_REGISTRY: 'Онкологический реестр',
+    COMMENT_HIGHTECH_CARE: 'Высокотехнологичная медпомощь',
+    COMMENT_STAGE1_ADULT: '1 этап диспансеризации взрослых',
+    COMMENT_STAGE2_ADULT: '2 этап диспансеризации взрослых',
+    COMMENT_ADULT_CHECKUPS: 'Профосмотры взрослых',
+    COMMENT_MINORS_CHECKUPS: 'Профосмотры несовершеннолетних',
+    COMMENT_ORPHANS_SCREENING: 'Диспансеризация детей-сирот',
+    COMMENT_WARDS_SCREENING: 'Диспансеризация детей без попечения',
+    COMMENT_STAGE1_ADVANCED: '1 этап углубленной диспансеризации',
+    COMMENT_STAGE2_ADVANCED: '2 этап углубленной диспансеризации',
+    COMMENT_STAGE1_REPRODUCTIVE: '1 этап диспансеризации репродуктивного здоровья',
+    COMMENT_STAGE2_REPRODUCTIVE: '2 этап диспансеризации репродуктивного здоровья',
+}

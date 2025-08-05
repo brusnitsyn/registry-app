@@ -6,6 +6,9 @@ import { NaiveUiResolver } from 'unplugin-vue-components/resolvers'
 import Components from 'unplugin-vue-components/vite'
 
 export default defineConfig({
+    optimizeDeps: {
+        include: ['@vicons/tabler']
+    },
     plugins: [
         laravel({
             input: 'resources/js/app.js',

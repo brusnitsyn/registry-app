@@ -8,7 +8,14 @@ use Illuminate\Http\Request;
 
 class FileController extends Controller
 {
-    public function files()
+    public function files(Request $request)
+    {
+        $registryFileId = $request->query('registry');
+        $registryFile = RegistryFile::whereId($registryFileId)->first();
+        return $registryFile->zglvs;
+    }
+
+    public function registries()
     {
         return RegistryFile::all();
     }

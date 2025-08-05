@@ -1,8 +1,29 @@
 <script setup>
-import {useLocalStorage} from "@vueuse/core";
-import {Sun} from '@vicons/tabler'
+import {breakpointsTailwind, useBreakpoints, useFetch, useLocalStorage} from "@vueuse/core";
+import {Selector, Sun} from '@vicons/tabler'
 import AppThemeSwitcher from "../AppThemeSwitcher.vue";
+import {router, usePage} from "@inertiajs/vue3";
+import {NIcon} from "naive-ui";
+import {useAuthFetch} from "../../../../composables/useAuthFetch.js";
 const collapseMenu = useLocalStorage('collapse-menu', false)
+const user = usePage().props.auth.user
+const breakpoints = useBreakpoints(breakpointsTailwind)
+const smaller = breakpoints.smallerOrEqual('sm')
+const options = computed(() => [
+    {
+        label: 'Выйти из учетной записи',
+        key: 'exit',
+        onClick: () => {
+            useAuthFetch(route('web.logout')).post().then(() => {
+                router.reload()
+            })
+        }
+    }
+])
+const selectOption = (option) => {
+    if (option.onClick)
+        option.onClick()
+}
 </script>
 
 <template>
@@ -10,21 +31,23 @@ const collapseMenu = useLocalStorage('collapse-menu', false)
         <NFlex>
             <AppThemeSwitcher />
         </NFlex>
-        <NButton quaternary style="--n-border-radius: 8px; height: 48px; position: relative;" >
-            <NFlex size="small" align="center" justify="start" :wrap="false" inline style="position: absolute; left: 11px;">
-                <div style="height: 32px; width: 32px; border-radius: 8px; border: var(--n-border-hover); border-style: dashed; background-size: 32px; background-clip: content-box; background-image: url('https://avatars.githubusercontent.com/u/42877650?v=4')" />
-                <transition>
-                    <NSpace v-if="!collapseMenu" vertical align="start" :size="2" inline>
+        <NDropdown v-if="!collapseMenu" :options="options" :placement="smaller ? 'bottom-end' : 'right-start'" trigger="click" style="border-radius: 4px; width: 240px;" @select="(key, option) => selectOption(option)">
+            <NButton quaternary style="--n-border-radius: 8px; height: 48px; position: relative;" >
+                <NFlex size="small" align="center" justify="start" :wrap="false" inline style="position: absolute; left: 11px;">
+                    <div style="height: 32px; width: 32px; border-radius: 8px; border: var(--n-border-hover); border-style: dashed; background-size: 32px; background-clip: content-box; background-image: url('https://placeholder.co/32')" />
+                    <transition>
+                        <NSpace v-if="!collapseMenu" vertical align="start" :size="2" inline>
                         <span style="font-weight: 500;">
-                            Брусницын Андрей
+                            {{ user?.name }}
                         </span>
-                        <NText>
-                            Разработчик
-                        </NText>
-                    </NSpace>
-                </transition>
-            </NFlex>
-        </NButton>
+                            <NText v-text="'{{ role_name }}'">
+
+                            </NText>
+                        </NSpace>
+                    </transition>
+                </NFlex>
+            </NButton>
+        </NDropdown>
     </NFlex>
 </template>
 

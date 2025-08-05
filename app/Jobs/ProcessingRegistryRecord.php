@@ -2,6 +2,9 @@
 
 namespace App\Jobs;
 
+use App\Data\Registry\Onko\ZapData;
+use App\Data\Registry\SchetData;
+use App\Data\Registry\ZglvData;
 use App\Models\RegistryCase;
 use App\Models\RegistryFile;
 use App\Models\RegistryPatient;
@@ -16,13 +19,22 @@ class ProcessingRegistryRecord implements ShouldQueue
     use Queueable, Batchable;
 
     private array $fileData;
+    private string $registryName;
+    private ZglvData $zglv;
+    private SchetData $schet;
+    private array $zaps;
 
     /**
      * Create a new job instance.
      */
-    public function __construct(array $fileData)
+    public function __construct(array $fileData, string $registryName)
     {
         $this->fileData = $fileData;
+        $this->registryName = $registryName;
+
+        $this->zglv = ZglvData::from($this->fileData['zglv']);
+        $this->schet = SchetData::from($this->fileData['schet']);
+        $this->zaps = $this->fileData['zap'];
     }
 
     /**
@@ -30,36 +42,24 @@ class ProcessingRegistryRecord implements ShouldQueue
      */
     public function handle(): void
     {
-        // Обработка файла
-        $registry = RegistryFile::updateOrCreate(
-            ['filename' => $this->fileData['filename']],
-            Arr::except($this->fileData, ['records', 'count'])
-        );
+        $registryFile = RegistryFile::create([
+            'filename' => $this->registryName,
+            'registry_type' => $this->fileData['type'],
+            'version' => $this->zglv->version,
+            'creation_date' => $this->zglv->data,
+        ]);
 
-        foreach ($this->fileData['records'] as $record) {
-            // Обработка пациента
-            $patient = RegistryPatient::updateOrCreate(
-                ['id_pac' => $record['patient']['guid']],
-                $record['patient']
-            );
+        $this->zglv->createModel($registryFile);
+        $this->schet->createModel($registryFile);
 
-            // Обработка случая
-            if ($record['case']) {
-                $case = RegistryCase::updateOrCreate(
-                    ['id_case' => $record['case']['id']],
-                    array_merge($record['case'], [
-                        'patient_id' => $patient->id,
-                        'registry_file_id' => $registry->id
-                    ])
-                );
+        $this->processZapInChunks(1, $registryFile);
+    }
 
-                // Обработка услуг
-                foreach ($record['case']['services'] as $service) {
-                    RegistryService::updateOrCreate(
-                        ['id_serv' => $service['guid']],
-                        array_merge($service, ['case_id' => $case->id])
-                    );
-                }
+    protected function processZapInChunks(int $chunkSize, RegistryFile $registryFile): void
+    {
+        foreach (array_chunk($this->zaps, $chunkSize) as $chunk) {
+            foreach ($chunk as $chunkData) {
+                ZapData::from($chunkData)->createModels($registryFile);
             }
         }
     }

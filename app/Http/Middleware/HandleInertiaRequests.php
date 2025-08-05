@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\RegistryFile;
 use App\Models\WebMenuItem;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
@@ -36,9 +37,28 @@ class HandleInertiaRequests extends Middleware
      */
     public function share(Request $request): array
     {
+        $viewType = $request->session()->get('view_type', 'registry');
+        $registryFile = RegistryFile::latest('id')->first();
+        $registryFileId = $request->query('registry', $registryFile?->id ?? null);
+        $menu = WebMenuItem::whereType($viewType)
+            ->orderBy('position')
+            ->get();
+        $registryFile = RegistryFile::whereId($registryFileId)->first();
+        $accessRegistryFiles = $registryFile?->zglvs;
         return [
             ...parent::share($request),
-            'menu' => WebMenuItem::all(),
+            'menu' => $menu,
+            'accessRegistryFiles' => $accessRegistryFiles,
+            'auth' => [
+                'user' => $request->user() ? [
+                    'id' => $request->user()->id,
+                    'name' => $request->user()->name,
+                    'email' => $request->user()->email,
+                ] : null,
+            ],
+            'router' => [
+                'query' => $request->query->all()
+            ]
         ];
     }
 }

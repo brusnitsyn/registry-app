@@ -15,14 +15,31 @@ class WebSeeder extends Seeder
     public function run(): void
     {
         WebMenuItem::updateOrCreate([
-            'key' => Str::slug('Медицинские услуги')
+            'key' => Str::slug('Реестр: Медицинские услуги')
         ], [
+            'type' => 'registry',
             'label' => 'Медицинские услуги',
             'href' => 'registry.services'
         ]);
         WebMenuItem::updateOrcreate([
-            'key' => Str::slug('Справочники')
+            'key' => Str::slug('Реестр: Справочники')
         ], [
+            'type' => 'registry',
+            'label' => 'Справочники',
+            'href' => 'libs.index'
+        ]);
+
+        WebMenuItem::updateOrCreate([
+            'key' => Str::slug('МИС: Медицинские услуги')
+        ], [
+            'type' => 'mis',
+            'label' => 'Медицинские услуги',
+            'href' => 'mis.services'
+        ]);
+        WebMenuItem::updateOrcreate([
+            'key' => Str::slug('МИС: Справочники')
+        ], [
+            'type' => 'mis',
             'label' => 'Справочники'
         ]);
     }

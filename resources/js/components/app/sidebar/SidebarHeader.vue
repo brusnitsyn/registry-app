@@ -1,9 +1,11 @@
 <script setup>
 import {breakpointsTailwind, useBreakpoints, useFetch, useLocalStorage} from "@vueuse/core";
 import {NEl, NFlex, NIcon} from "naive-ui";
-import {Selector, SquarePlus} from "@vicons/tabler";
-import {Link, router, usePrefetch} from "@inertiajs/vue3";
-import Modal from "../modal/Modal.vue";
+import {Frame, Replace, Selector, SquarePlus} from "@vicons/tabler";
+import {Link, router, usePage, usePrefetch} from "@inertiajs/vue3";
+import Modal from "../modal/UploadRegistryModal.vue";
+import {useAuthFetch} from "../../../../composables/useAuthFetch.js";
+import {useRouterQuery} from "../../../../composables/useRouterQuery.js";
 
 const collapseMenu = useLocalStorage('collapse-menu', false)
 const menuFile = ref([])
@@ -21,55 +23,92 @@ const renderIcon = (icon) => {
         })
     )
 }
-const options = [
-    {
-        type: 'group',
-        label: 'Доступные реестры',
-        key: 'registry',
-        show: menuFile.value.length > 0,
-        children: [
-            {
-                label: '2025.02',
-                key: '2025.02',
-                icon: () => renderIcon(SquarePlus),
-                selected: true,
+const options = computed(() => {
+    return [
+        {
+            type: 'group',
+            label: 'Доступные реестры',
+            key: 'registry',
+            show: menuFile.value.length > 0,
+            children: [...menuFile.value].map(item => ({
+                ...item,
+                selected: true
+            })),
+        },
+        {
+            type: 'render',
+            key: 'no-available',
+            show: menuFile.value.length === 0,
+            render: () => h(
+                NEl,
+                {
+                    style: 'padding: 4px 12px; color: var(--text-color-1)'
+                },
+                'Нет доступных реестров'
+            )
+        },
+        {
+            type: 'divider',
+            key: 'd1'
+        },
+        {
+            label: 'Загрузить реестр',
+            key: 'upload-registry',
+            icon: () => renderIcon(SquarePlus),
+            onClick: () => {
+                hasOpenUploaderModal.value = true
             }
-        ],
-    },
-    {
-        type: 'render',
-        key: 'no-available',
-        show: menuFile.value.length === 0,
-        render: () => h(
-            NEl,
-            {
-                style: 'padding: 4px 12px; color: var(--text-color-1)'
-            },
-            'Нет доступных реестров'
-        )
-    },
-    {
-        type: 'divider',
-        key: 'd1'
-    },
-    {
-        label: 'Загрузить реестр',
-        key: 'upload-registry',
-        icon: () => renderIcon(SquarePlus),
-        onClick: () => {
-            hasOpenUploaderModal.value = true
         }
-    }
-]
-const selectedOption = ref(options[0].children[0])
+    ]
+})
+const selectedOption = ref(null)
 const breakpoints = useBreakpoints(breakpointsTailwind)
 const smaller = breakpoints.smallerOrEqual('sm')
 const hasOpenUploaderModal = ref(false)
-const selectOption = (option) => {
-    if (option.selected === true)
+const {value: registryFile, setQuery: setRegistryFile} = useRouterQuery('registry', null)
+const {query} = useRouterQuery()
+const viewType = useLocalStorage('view', 'registry')
+
+const emits = defineEmits(['updateRegistry'])
+
+const selectOption = async (option) => {
+    if (option.selected === true) {
+        isComponentFetching.value = true
         selectedOption.value = option
+        router.get(
+            route(route().current()),
+            {
+                ...query.value,
+                zglv: undefined, // удаляем параметр
+                registry: option.key // устанавливаем новый
+            },
+            {
+                preserveState: true,
+                replace: true
+            }
+        )
+        emits('updateRegistry', option.key)
+        isComponentFetching.value = false
+    }
     else
         option.onClick()
+}
+
+const changeView = async () => {
+    if (viewType.value === 'registry') {
+        viewType.value = 'mis'
+        await useAuthFetch(route('web.session.update-view-type')).post({ view_type: viewType.value })
+        router.reload({
+            preserveState: true
+        })
+    }
+    else {
+        viewType.value = 'registry'
+        await useAuthFetch(route('web.session.update-view-type')).post({ view_type: viewType.value })
+        router.reload({
+            preserveState: true
+        })
+    }
 }
 
 onMounted(async () => {
@@ -77,11 +116,16 @@ onMounted(async () => {
 
     isComponentFetching.value = isFetching.value
     if (error) {
-        return
+        // console.log(error)
     }
     if (data.value.length > 0) {
-        console.log(data.value.length)
         menuFile.value = data.value
+        if (registryFile.value !== null) {
+            selectedOption.value = menuFile.value.find(itm => itm.key === Number(registryFile.value))
+        } else {
+            selectedOption.value = menuFile.value[menuFile.value.length - 1]
+            await setRegistryFile(selectedOption.value.key)
+        }
     }
 })
 </script>
@@ -91,17 +135,16 @@ onMounted(async () => {
         <Link href="/" style="position: absolute; left: 11px; top: 8px;">
             <NFlex size="small" align="center" justify="start" :wrap="false" inline>
                 <NFlex align="center" justify="center" style="height: 32px; width: 32px; border-radius: 8px; border: var(--n-border-hover); border-style: dashed; background-color: var(--n-item-color-active)">
-                    <img src="/img/logo.svg"  alt="" width="24" />
+                    <NIcon :component="Frame" size="20" />
+<!--                    <img src="/img/logo.svg"  alt="" width="24" />-->
                 </NFlex>
                 <transition>
                     <div v-if="!collapseMenu">
                         <NSpace vertical align="start" :size="2" inline>
-                            <span style="font-weight: 500;">
-                                Реестр
-                            </span>
+                            <span style="font-weight: 500;" v-text="viewType === 'mis' ? 'ВЕБ-МИС' : 'Реестр'" />
                             <NSkeleton v-if="isComponentFetching" style="width: 54px; height: 15px;" animated round />
-                            <NText v-else>
-                                {{ selectedOption.label }}
+                            <NText v-else-if="viewType === 'registry'">
+                                {{ selectedOption?.label }}
                             </NText>
                         </NSpace>
                     </div>
@@ -109,11 +152,21 @@ onMounted(async () => {
             </NFlex>
         </Link>
         <transition>
-            <NDropdown v-if="!collapseMenu" :options="options" :placement="smaller ? 'bottom-end' : 'right-start'" trigger="click" style="border-radius: 4px; width: 240px;" @select="(key, option) => selectOption(option)">
-                <NButton quaternary style="--n-border-radius: 8px; --n-padding: 0 8px; position: absolute; right: 8px; z-index: 99990;">
-                    <NIcon :component="Selector" size="18" />
-                </NButton>
-            </NDropdown>
+            <NFlex v-if="!collapseMenu" align="center">
+<!--                <NTooltip>-->
+<!--                    <template #trigger>-->
+<!--                        <NButton @click="changeView" quaternary style="&#45;&#45;n-border-radius: 8px; &#45;&#45;n-padding: 0 8px; position: absolute; z-index: 99990;" :style="viewType === 'registry' ? 'right: 48px;' : 'right: 8px;'">-->
+<!--                            <NIcon :component="Replace" size="18" />-->
+<!--                        </NButton>-->
+<!--                    </template>-->
+<!--                    Перейти к представлению {{ viewType === 'mis' ? 'реестра' : 'ВЕБ-МИС' }}-->
+<!--                </NTooltip>-->
+                <NDropdown v-if="viewType === 'registry'" :options="options" :placement="smaller ? 'bottom-end' : 'right-start'" trigger="click" style="border-radius: 4px; width: 240px;" @select="(key, option) => selectOption(option)">
+                    <NButton quaternary style="--n-border-radius: 8px; --n-padding: 0 8px; position: absolute; right: 8px; z-index: 99990;">
+                        <NIcon :component="Selector" size="18" />
+                    </NButton>
+                </NDropdown>
+            </NFlex>
         </transition>
     </NButton>
     <Modal v-model:show="hasOpenUploaderModal" />

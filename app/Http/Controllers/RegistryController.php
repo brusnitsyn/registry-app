@@ -2,44 +2,34 @@
 
 namespace App\Http\Controllers;
 
-use App\Jobs\ProcessingRegistryRecord;
-use App\Models\RegistryCase;
-use App\Models\RegistryPatient;
-use App\Models\RegistryService;
-use Illuminate\Bus\Batch;
+use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Bus;
 use Illuminate\Support\Facades\Http;
-use Throwable;
+use Illuminate\Support\Facades\Log;
+use Inertia\Inertia;
 
 class RegistryController extends Controller
 {
-    public function parse(Request $request)
+    public function prepare(Request $request)
     {
-        $request->validate(['registry' => 'required|file|mimes:zip']);
+        // Валидируем входной файл
+        $request->validate(['registry' => 'required|file|mimes:zip,xml']);
 
-        $response = Http::timeout(600)
-            ->attach('file', file_get_contents($request->file('registry')),
-                $request->file('registry')->getClientOriginalName())
-            ->post('http://localhost:8001/parse-registry');
+        $registryFile = $request->file('registry');
+        $fileName = $registryFile->getClientOriginalName();
 
-        if ($response->successful()) {
-            $data = $response->json();
-
-            $jobs = [];
-            foreach ($data['data'] as $fileData) {
-                $jobs[] = new ProcessingRegistryRecord($fileData);
-            }
-
-            $batch = Bus::batch($jobs)
-                ->before(function (Batch $batch) {})
-                ->progress(function (Batch $batch) {})
-                ->then(function (Batch $batch) {})
-                ->catch(function (Batch $batch, Throwable $e) {})
-                ->finally(function (Batch $batch) {})
-                ->dispatch();
+        try {
+            $response = Http::timeout(600)
+                ->attach('file', $registryFile->getContent(), $fileName)
+                ->post(config('services.parser.url') . "/api/v1/parse");
+        } catch (ConnectionException $connectionException) {
+            Log::error($connectionException->getMessage());
+            return response()->setStatusCode(500);
         }
 
-        return response()->json(['error' => 'Processing failed'], 500);
+        return response()->json([
+            'status' => 'ok',
+            'message' => 'Файл отправлен на обработку',
+        ]);
     }
 }
