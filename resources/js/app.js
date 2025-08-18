@@ -8,6 +8,7 @@ import {useLocalStorage} from "@vueuse/core";
 import MisLayout from "./layouts/MisLayout.vue";
 import AuthLayout from "./layouts/AuthLayout.vue";
 
+
 createInertiaApp({
     title: title => `${title}`,
     resolve: name => {

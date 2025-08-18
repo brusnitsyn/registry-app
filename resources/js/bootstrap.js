@@ -4,6 +4,15 @@ window.axios = axios;
 
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 
+// Устанавливаем CSRF-токен для всех запросов
+let token = document.head.querySelector('meta[name="csrf-token"]')
+
+if (token) {
+    axios.defaults.headers.common['X-CSRF-TOKEN'] = token.content
+} else {
+    console.error('CSRF token not found')
+}
+
 configureEcho({
     broadcaster: "reverb",
     // key: import.meta.env.VITE_REVERB_APP_KEY,
